@@ -31,10 +31,11 @@ namespace Shooter.Screens
 		// Keyboard states used to determine key presses
 		KeyboardState currentKeyboardState;
 
-		public ActionScreen(Game game, SpriteBatch spriteBatch, Texture2D image)
-			: base(game, spriteBatch)
+		SpriteBatch spriteBatch;
+
+		public ActionScreen(Game game)
+			: base(game)
 		{
-			this.image = image;
 			imageRectangle = new Rectangle(
 				0,
 				0,
@@ -53,21 +54,28 @@ namespace Shooter.Screens
 			// Initialize the enemies list
 			enemies = new List<Enemy>();
 
-			// Initialize the player class
-			player = new Player(this.Game, spriteBatch);	
+			
+		}
+
+
+		protected override void LoadContent()
+		{
+			spriteBatch = new SpriteBatch(GraphicsDevice);
+			image = Game.Content.Load<Texture2D>("greenmetal");
+			base.LoadContent();
 		}
 
 		public override void Initialize()
 		{
-			base.Initialize();
-
-			// Load the player resources 
 			Vector2 playerPosition = new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y + GraphicsDevice.Viewport.TitleSafeArea.Height / 2);
-			player.Initialize(Content.Load<Texture2D>("Fish"), playerPosition);
 
+			// Initialize the player class
+			player = new Player(this.Game, playerPosition);
 			Components.Add(player);
 
 			enemyTexture = Content.Load<Texture2D>("enemy");
+			
+			base.Initialize();
 		}
 
 		public override void Update(GameTime gameTime)
@@ -91,11 +99,13 @@ namespace Shooter.Screens
 		{
 			base.Draw(gameTime);
 
+			spriteBatch.Begin();
 			// Draw the Enemies
 			for (int i = 0; i < enemies.Count; i++)
 			{
 				enemies[i].Draw(spriteBatch);
 			}
+			spriteBatch.End();
 		}
 
 		private void AddEnemy()

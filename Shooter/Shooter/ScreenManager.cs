@@ -12,34 +12,20 @@ namespace Shooter
 	public class ScreenManager : DrawableComponentManager
 	{
 		ScreenBase activeScreen;
+
 		StartScreen startScreen;
 		ActionScreen actionScreen;
 
-		public ScreenManager(Game game, SpriteBatch spriteBatch)
-			: base(game, spriteBatch)
+		public ScreenManager(Game game)
+			: base(game)
 		{
-		}
-
-		public override void Initialize()
-		{
-			base.Initialize();
-
-			startScreen = new StartScreen(
-				this.Game,
-				spriteBatch,
-				Content.Load<SpriteFont>("gameFont"),
-				Content.Load<Texture2D>("alienmetal"));
-			Game.Components.Add(startScreen);
-			startScreen.Initialize();
+			startScreen = new StartScreen(this.Game);
 			startScreen.Hide();
+			Components.Add(startScreen);
 
-			actionScreen = new ActionScreen(
-				this.Game,
-				spriteBatch,
-				Content.Load<Texture2D>("greenmetal"));
-			Components.Add(actionScreen);
-			actionScreen.Initialize();
+			actionScreen = new ActionScreen(this.Game);
 			actionScreen.Hide();
+			Components.Add(actionScreen);
 
 			activeScreen = startScreen;
 			activeScreen.Show();

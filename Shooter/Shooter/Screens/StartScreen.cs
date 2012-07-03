@@ -17,22 +17,30 @@ namespace Shooter.Screens
 		KeyboardState oldKeyboardState;
 		KeyboardState keyboardState;
 
-		public StartScreen(Game game, SpriteBatch spriteBatch, SpriteFont spriteFont, Texture2D image)
-			: base(game, spriteBatch)
+		SpriteBatch spriteBatch;
+
+		public StartScreen(Game game)
+			: base(game)
 		{
 			string[] menuItems = { "Start Game", "End Game" };
-			menuComponent = new MenuComponent(game,
-				spriteBatch,
-				spriteFont,
-				menuItems);
+			
+			menuComponent = new MenuComponent(game, menuItems);
 			Components.Add(menuComponent);
 			
-			this.image = image;
 			imageRectangle = new Rectangle(
 				0,
 				0,
 				Game.Window.ClientBounds.Width,
 				Game.Window.ClientBounds.Height);
+		}
+
+		protected override void LoadContent()
+		{
+			spriteBatch = new SpriteBatch(GraphicsDevice);
+
+			image = Content.Load<Texture2D>("alienmetal");
+
+			base.LoadContent();
 		}
 
 		public override void Update(GameTime gameTime)
@@ -42,11 +50,11 @@ namespace Shooter.Screens
 
 			if (CheckKey(Keys.Enter))
 			{
-				if (SelectedIndex == 0)
+				if (menuComponent.SelectedIndex == 0)
 				{
 					Game1.screenManager.Navigate(Screen.Game);
 				}
-				else if (SelectedIndex == 1)
+				else if (menuComponent.SelectedIndex == 1)
 				{
 					this.Game.Exit();
 				}
@@ -59,7 +67,9 @@ namespace Shooter.Screens
 
 		public override void Draw(GameTime gameTime)
 		{
+			spriteBatch.Begin();
 			spriteBatch.Draw(image, imageRectangle, Color.White);
+			spriteBatch.End();
 			base.Draw(gameTime);
 		}
 

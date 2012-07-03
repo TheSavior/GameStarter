@@ -26,13 +26,13 @@ namespace Shooter
 
 		public int ScaledWidth
 		{
-			get { return EnemyTexture.Width * size; }
+			get { return EnemyTexture.Width; }
 		}
 
 		// Get the height of the enemy ship
 		public int ScaledHeight
 		{
-			get { return EnemyTexture.Height * size; }
+			get { return EnemyTexture.Height; }
 		}
 
 		public Enemy(Game game, float size)

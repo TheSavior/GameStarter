@@ -16,7 +16,6 @@ namespace Shooter
 {
 	public abstract class DrawableComponentManager : DrawableGameComponent
 	{
-		protected SpriteBatch spriteBatch;
 		protected ContentManager Content;
 
 		public List<GameComponent> Components
@@ -25,12 +24,11 @@ namespace Shooter
 			protected set;
 		}
 
-		public DrawableComponentManager(Game game, SpriteBatch spriteBatch)
+		public DrawableComponentManager(Game game)
 			: base(game)
 		{
 			Components = new List<GameComponent>();
 			Content = Game.Content;
-			this.spriteBatch = spriteBatch;
 		}
 
 		public override void Initialize()
@@ -45,7 +43,7 @@ namespace Shooter
 				}
 			}
 		}
-
+		
 		public override void Update(GameTime gameTime)
 		{
 			base.Update(gameTime);

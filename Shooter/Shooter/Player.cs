@@ -13,7 +13,7 @@ namespace Shooter
 
 		// Position of the Player relative to the upper left side of the screen
 		private Vector2 position;
-		
+
 		// Velocity of the Player
 		public Vector2 Velocity;
 
@@ -35,22 +35,24 @@ namespace Shooter
 					PlayerTexture.Height);
 			}
 		}
-		
+
 		private SpriteBatch spriteBatch;
 
-		public Player(Game game, SpriteBatch spriteBatch) : base(game)
+		public Player(Game game, Vector2 position)
+			: base(game)
 		{
 			this.Active = true;
 			this.Size = 1;
-			this.spriteBatch = spriteBatch;
-		}
-
-		public void Initialize(Texture2D texture, Vector2 position)
-		{
-			PlayerTexture = texture;
 
 			// Set the starting position of the player around the middle of the screen and to the back
 			this.position = position;
+		}
+
+		protected override void LoadContent()
+		{
+			PlayerTexture = Game.Content.Load<Texture2D>("Fish");
+
+			base.LoadContent();
 		}
 
 		public override void Update(GameTime gameTime)
@@ -62,7 +64,9 @@ namespace Shooter
 
 		public override void Draw(GameTime gameTime)
 		{
+			spriteBatch.Begin();
 			spriteBatch.Draw(PlayerTexture, position, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+			spriteBatch.End();
 		}
 
 		public void Eat(float enemySize)
@@ -83,11 +87,11 @@ namespace Shooter
 				position.X,
 				0,
 				Game.GraphicsDevice.Viewport.Width - PlayerTexture.Width);
-			
+
 			position.Y += Velocity.Y;
 
 
-			if (position.Y <0 ||
+			if (position.Y < 0 ||
 				position.Y > Game.GraphicsDevice.Viewport.Height - PlayerTexture.Height)
 			{
 				Velocity.Y = 0;
@@ -119,7 +123,7 @@ namespace Shooter
 			Velocity.X = MathHelper.Clamp(Velocity.X, max_speed * -1, max_speed);
 			Velocity.Y = MathHelper.Clamp(Velocity.Y, max_speed * -1, max_speed);
 		}
-		
+
 		// Method called when you just let go of the X-direction
 		//      keys. It will slow down the ball, giving the feel
 		//      of momentum.

@@ -17,7 +17,6 @@ namespace Shooter
 	public class Game1 : Game
 	{
 		GraphicsDeviceManager graphics;
-		SpriteBatch spriteBatch;
 
 		public static ScreenManager screenManager;
 
@@ -25,12 +24,13 @@ namespace Shooter
 		{
 			graphics = new GraphicsDeviceManager(this);
 			Content.RootDirectory = "Content";
-
 		}
 
 		protected override void Initialize()
 		{
 			// TODO: Add your initialization logic here
+			screenManager = new ScreenManager(this);
+			Components.Add(screenManager);
 
 			base.Initialize();
 		}
@@ -38,13 +38,6 @@ namespace Shooter
 		protected override void LoadContent()
 		{
 			// Create a new SpriteBatch, which can be used to draw textures.
-			spriteBatch = new SpriteBatch(GraphicsDevice);
-
-			screenManager = new ScreenManager(this, spriteBatch);
-			screenManager.Initialize();
-
-			Components.Add(screenManager);
-
 			base.LoadContent();
 		}
 
@@ -63,13 +56,7 @@ namespace Shooter
 		{
 			GraphicsDevice.Clear(Color.CornflowerBlue);
 
-			// Start drawing
-			spriteBatch.Begin();
-
 			base.Draw(gameTime);
-
-			// Stop drawing
-			spriteBatch.End();
 		}
 	}
 }

@@ -16,8 +16,8 @@ namespace Shooter
 {
 	public abstract class ScreenBase : DrawableComponentManager
 	{
-		public ScreenBase(Game game, SpriteBatch spriteBatch)
-			: base(game, spriteBatch)
+		public ScreenBase(Game game)
+			: base(game)
 		{
 		}
 

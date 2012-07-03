@@ -34,16 +34,19 @@ namespace Shooter
 			}
 		}
 
-		public MenuComponent(Game game,
-			SpriteBatch spriteBatch,
-			SpriteFont spriteFont,
-			string[] menuItems)
+		public MenuComponent(Game game, string[] menuItems)
 			: base(game)
 		{
-			this.spriteBatch = spriteBatch;
-			this.spriteFont = spriteFont;
 			this.menuItems = menuItems;
+		}
+
+		protected override void LoadContent()
+		{
+			spriteBatch = new SpriteBatch(GraphicsDevice);
+			spriteFont = Game.Content.Load<SpriteFont>("gameFont");
 			MeasureMenu();
+
+			base.LoadContent();
 		}
 
 		private void MeasureMenu()
@@ -101,6 +104,7 @@ namespace Shooter
 			Vector2 location = position;
 			Color tint;
 
+			spriteBatch.Begin();
 			for (int i = 0; i < menuItems.Length; i++)
 			{
 				if (i == _selectedIndex)
@@ -119,6 +123,7 @@ namespace Shooter
 					tint);
 				location.Y += spriteFont.LineSpacing + 5;
 			}
+			spriteBatch.End();
 		}
 
 	}
