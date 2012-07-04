@@ -24,19 +24,21 @@ namespace Shooter.Actors
 
 		private float max_speed = 3f;
 
+		private SpriteBatch spriteBatch;
+
 		public Rectangle BoundingBox
 		{
 			get
 			{
 				return new Rectangle(
-					(int)position.X - PlayerTexture.Width / 2,
-					(int)position.Y - PlayerTexture.Height / 2,
-					PlayerTexture.Width,
-					PlayerTexture.Height);
+					(int)(position.X - (PlayerTexture.Width * Size) / 2),
+					(int)(position.Y - (PlayerTexture.Height * Size) / 2),
+					(int)(PlayerTexture.Width * Size),
+					(int)(PlayerTexture.Height * Size));
 			}
 		}
 
-		private SpriteBatch spriteBatch;
+		protected Rectangle DestinationRectangle;
 
 		public Player()
 		{
@@ -61,6 +63,16 @@ namespace Shooter.Actors
 			base.LoadContent();
 		}
 
+		public void Bigger()
+		{
+			Size *= (float)Math.Sqrt(1.1);
+		}
+
+		public void Smaller()
+		{
+			Size /= (float)Math.Sqrt(0.9);
+		}
+
 		public override void Update(GameTime gameTime)
 		{
 			UpdatePosition();
@@ -70,11 +82,12 @@ namespace Shooter.Actors
 
 		public override void Draw(GameTime gameTime)
 		{
-			// Center the player
-			var origin = new Vector2(BoundingBox.Width / 2, BoundingBox.Height / 2);
+			// Center of the texture origin
+			var origin = new Vector2(PlayerTexture.Width / 2, PlayerTexture.Height / 2);
 
 			spriteBatch.Begin();
-			spriteBatch.Draw(PlayerTexture, position, null, Color.White, 0f, origin, 1f, SpriteEffects.None, 0f);
+			//spriteBatch.Draw(PlayerTexture, BoundingBox, null, Color.White, 0f, origin, SpriteEffects.None, 0f);
+			spriteBatch.Draw(PlayerTexture, position, null, Color.White, 0f, origin, Size, SpriteEffects.None, 0f);
 			spriteBatch.End();
 		}
 

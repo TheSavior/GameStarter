@@ -26,6 +26,7 @@ namespace Shooter.Screens
 		Random random;
 
 		// Keyboard states used to determine key presses
+		KeyboardState previousKeyboardState;
 		KeyboardState currentKeyboardState;
 
 		SpriteBatch spriteBatch;
@@ -72,6 +73,11 @@ namespace Shooter.Screens
 			// Read the current state of the keyboard and gamepad and store it
 			currentKeyboardState = Keyboard.GetState();
 
+			if (previousKeyboardState == null)
+			{
+				previousKeyboardState = currentKeyboardState;
+			}
+
 			// Update the player
 			UpdatePlayer(gameTime);
 
@@ -82,6 +88,8 @@ namespace Shooter.Screens
 			UpdateCollision();
 
 			base.Update(gameTime);
+
+			previousKeyboardState = currentKeyboardState;
 		}
 
 		public override void Draw(GameTime gameTime)
@@ -129,6 +137,15 @@ namespace Shooter.Screens
 			if (right) player.AddDirection(Direction.Right);
 			if (up) player.AddDirection(Direction.Up);
 			if (down) player.AddDirection(Direction.Down);
+
+			if (currentKeyboardState.IsKeyDown(Keys.A) && previousKeyboardState.IsKeyUp(Keys.A))
+			{
+				player.Bigger();
+			}
+			else if (currentKeyboardState.IsKeyDown(Keys.S) && previousKeyboardState.IsKeyUp(Keys.S))
+			{
+				player.Smaller();
+			}
 
 			if (!right & !left)
 			{
@@ -183,7 +200,7 @@ namespace Shooter.Screens
 					// Collision, either game over or success eating
 					if (enemies[i].size <= player.Size)
 					{
-						player.Eat(enemies[i].size);
+						//player.Eat(enemies[i].size);
 						enemies[i].Active = false;
 					}
 					else
