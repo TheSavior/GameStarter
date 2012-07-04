@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 
-
 namespace Shooter
 {
 	public abstract class DrawableComponentManager : DrawableComponent

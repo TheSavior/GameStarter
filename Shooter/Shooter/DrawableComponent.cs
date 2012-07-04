@@ -2,7 +2,7 @@
 
 namespace Shooter
 {
-	public class DrawableComponent : DrawableGameComponent
+	public abstract class DrawableComponent : DrawableGameComponent
 	{
 		public DrawableComponent()
 			: base(Globals.Game)

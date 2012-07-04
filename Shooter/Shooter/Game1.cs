@@ -35,15 +35,15 @@ namespace Shooter
 
 		protected override void Update(GameTime gameTime)
 		{
-			Globals.ScreenManager.Update(gameTime);
 			base.Update(gameTime);
+			Globals.ScreenManager.Update(gameTime);
 		}
 
 		protected override void Draw(GameTime gameTime)
 		{
 			GraphicsDevice.Clear(Color.CornflowerBlue);
-			Globals.ScreenManager.Draw(gameTime);
 			base.Draw(gameTime);
+			Globals.ScreenManager.Draw(gameTime);
 		}
 	}
 }

@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Shooter
+namespace Shooter.Actors
 {
 	public class Enemy : DrawableComponent
 	{
