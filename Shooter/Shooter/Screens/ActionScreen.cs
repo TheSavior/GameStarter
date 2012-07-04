@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Content;
 
 namespace Shooter.Screens
 {
@@ -18,7 +15,6 @@ namespace Shooter.Screens
 		Player player;
 
 		// Enemies
-		Texture2D enemyTexture;
 		List<Enemy> enemies;
 
 		// The rate at which the enemies appear
@@ -33,13 +29,12 @@ namespace Shooter.Screens
 
 		SpriteBatch spriteBatch;
 
-		public ActionScreen(Game game)
-			: base(game)
+		public ActionScreen()
 		{
 			imageRectangle = new Rectangle(
 				0,
 				0,
-				Game.Window.ClientBounds.Width,
+				Globals.Game.Window.ClientBounds.Width,
 				Game.Window.ClientBounds.Height);
 
 			// Set the time keepers to zero
@@ -53,29 +48,21 @@ namespace Shooter.Screens
 
 			// Initialize the enemies list
 			enemies = new List<Enemy>();
-
-			
 		}
 
 
-		protected override void LoadContent()
+		public override void LoadContent()
 		{
-			spriteBatch = new SpriteBatch(GraphicsDevice);
+			spriteBatch = new SpriteBatch(Globals.Graphics.GraphicsDevice);
 			image = Game.Content.Load<Texture2D>("greenmetal");
-			base.LoadContent();
-		}
 
-		public override void Initialize()
-		{
-			Vector2 playerPosition = new Vector2(GraphicsDevice.Viewport.TitleSafeArea.X, GraphicsDevice.Viewport.TitleSafeArea.Y + GraphicsDevice.Viewport.TitleSafeArea.Height / 2);
+			Vector2 playerPosition = new Vector2(0, Globals.Graphics.GraphicsDevice.Viewport.Height / 2);
 
 			// Initialize the player class
 			player = new Player(this.Game, playerPosition);
 			Components.Add(player);
 
-			enemyTexture = Content.Load<Texture2D>("enemy");
-			
-			base.Initialize();
+			base.LoadContent();
 		}
 
 		public override void Update(GameTime gameTime)
@@ -110,14 +97,16 @@ namespace Shooter.Screens
 
 		private void AddEnemy()
 		{
-			// Randomly generate the position of the enemy
-			Vector2 position = new Vector2(GraphicsDevice.Viewport.Width + enemyTexture.Width / 2, random.Next(100, GraphicsDevice.Viewport.Height - 100));
-
 			// Create an enemy
-			Enemy enemy = new Enemy(this.Game, 1);
+			Enemy enemy = new Enemy(1);
+
+			// Randomly generate the position of the enemy
+			var viewport = Globals.Graphics.GraphicsDevice.Viewport;
+			Vector2 position = new Vector2(viewport.Width, random.Next(100, viewport.Height - 100));
 
 			// Initialize the enemy
-			enemy.Initialize(enemyTexture, position);
+			enemy.Initialize(position);
+			enemy.LoadContent();
 
 			// Add the enemy to the active enemies list
 			enemies.Add(enemy);

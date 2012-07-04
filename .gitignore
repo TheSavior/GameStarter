@@ -1,1 +1,6 @@
 *.cachefile
+bin
+obj
+*.suo
+*.user
+_ReSharper.*

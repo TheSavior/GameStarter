@@ -7,7 +7,7 @@ namespace Shooter
 	/// <summary>
 	/// This is a game component that implements IUpdateable.
 	/// </summary>
-	public class MenuComponent : DrawableGameComponent
+	public class MenuComponent : DrawableComponent
 	{
 		string[] menuItems;
 
@@ -34,16 +34,15 @@ namespace Shooter
 			}
 		}
 
-		public MenuComponent(Game game, string[] menuItems)
-			: base(game)
+		public MenuComponent(string[] menuItems)
 		{
 			this.menuItems = menuItems;
 		}
 
-		protected override void LoadContent()
+		public override void LoadContent()
 		{
-			spriteBatch = new SpriteBatch(GraphicsDevice);
-			spriteFont = Game.Content.Load<SpriteFont>("gameFont");
+			spriteBatch = new SpriteBatch(Globals.Graphics.GraphicsDevice);
+			spriteFont = Globals.Game.Content.Load<SpriteFont>("gameFont");
 			MeasureMenu();
 
 			base.LoadContent();
@@ -64,8 +63,8 @@ namespace Shooter
 			}
 
 			position = new Vector2(
-				(Game.Window.ClientBounds.Width - width) / 2,
-				(Game.Window.ClientBounds.Height - height) / 2);
+				(Globals.Game.Window.ClientBounds.Width - width) / 2,
+				(Globals.Game.Window.ClientBounds.Height - height) / 2);
 		}
 
 		public override void Initialize()
@@ -125,6 +124,5 @@ namespace Shooter
 			}
 			spriteBatch.End();
 		}
-
 	}
 }

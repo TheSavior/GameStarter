@@ -1,23 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-using Microsoft.Xna.Framework.Net;
-using Microsoft.Xna.Framework.Storage;
+﻿using Microsoft.Xna.Framework;
 
 
 namespace Shooter
 {
 	public abstract class ScreenBase : DrawableComponentManager
 	{
-		public ScreenBase(Game game)
-			: base(game)
+		public ScreenBase()
 		{
 		}
 
@@ -34,29 +22,14 @@ namespace Shooter
 			}
 		}
 
-		public override void Update(GameTime gameTime)
+		public new virtual void LoadContent()
 		{
-			base.Update(gameTime);
-			foreach (GameComponent component in Components)
-			{
-				if (component.Enabled == true)
-				{
-					component.Update(gameTime);
-				}
-			}
+			base.LoadContent();
 		}
 
-		public override void Draw(GameTime gameTime)
+		public new virtual void UnloadContent()
 		{
-			base.Draw(gameTime);
-			foreach (GameComponent component in Components)
-			{
-				if (component is DrawableGameComponent &&
-					((DrawableGameComponent)component).Visible)
-				{
-					((DrawableGameComponent)component).Draw(gameTime);
-				}
-			}
+			base.UnloadContent();
 		}
 
 		public virtual void Show()
@@ -66,9 +39,9 @@ namespace Shooter
 			foreach (GameComponent component in Components)
 			{
 				component.Enabled = true;
-				if (component is DrawableGameComponent)
+				if (component is DrawableComponent)
 				{
-					((DrawableGameComponent)component).Visible = true;
+					((DrawableComponent)component).Visible = true;
 				}
 			}
 		}
@@ -80,9 +53,9 @@ namespace Shooter
 			foreach (GameComponent component in Components)
 			{
 				component.Enabled = false;
-				if (component is DrawableGameComponent)
+				if (component is DrawableComponent)
 				{
-					((DrawableGameComponent)component).Visible = false;
+					((DrawableComponent)component).Visible = false;
 				}
 			}
 		}

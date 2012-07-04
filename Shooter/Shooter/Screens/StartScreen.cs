@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -19,14 +15,13 @@ namespace Shooter.Screens
 
 		SpriteBatch spriteBatch;
 
-		public StartScreen(Game game)
-			: base(game)
+		public StartScreen()
 		{
 			string[] menuItems = { "Start Game", "End Game" };
-			
-			menuComponent = new MenuComponent(game, menuItems);
+
+			menuComponent = new MenuComponent(menuItems);
 			Components.Add(menuComponent);
-			
+
 			imageRectangle = new Rectangle(
 				0,
 				0,
@@ -34,9 +29,9 @@ namespace Shooter.Screens
 				Game.Window.ClientBounds.Height);
 		}
 
-		protected override void LoadContent()
+		public override void LoadContent()
 		{
-			spriteBatch = new SpriteBatch(GraphicsDevice);
+			spriteBatch = new SpriteBatch(Globals.Graphics.GraphicsDevice);
 
 			image = Content.Load<Texture2D>("alienmetal");
 
@@ -52,14 +47,14 @@ namespace Shooter.Screens
 			{
 				if (menuComponent.SelectedIndex == 0)
 				{
-					Game1.screenManager.Navigate(Screen.Game);
+					Globals.ScreenManager.Navigate(Screen.Game);
 				}
 				else if (menuComponent.SelectedIndex == 1)
 				{
 					this.Game.Exit();
 				}
 			}
- 
+
 			base.Update(gameTime);
 
 			oldKeyboardState = keyboardState;

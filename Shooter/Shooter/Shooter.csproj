@@ -108,6 +108,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DrawableComponent.cs" />
+    <Compile Include="Globals.cs" />
     <Compile Include="Screen.cs" />
     <Compile Include="Screens\ActionScreen.cs" />
     <Compile Include="Direction.cs" />

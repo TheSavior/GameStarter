@@ -1,20 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-using Microsoft.Xna.Framework.Net;
-using Microsoft.Xna.Framework.Storage;
 
 
 namespace Shooter
 {
-	public abstract class DrawableComponentManager : DrawableGameComponent
+	public abstract class DrawableComponentManager : DrawableComponent
 	{
 		protected ContentManager Content;
 
@@ -24,8 +15,7 @@ namespace Shooter
 			protected set;
 		}
 
-		public DrawableComponentManager(Game game)
-			: base(game)
+		public DrawableComponentManager()
 		{
 			Components = new List<GameComponent>();
 			Content = Game.Content;
@@ -43,7 +33,21 @@ namespace Shooter
 				}
 			}
 		}
-		
+
+		public override void LoadContent()
+		{
+			base.LoadContent();
+
+			foreach (GameComponent component in Components)
+			{
+				if (component is DrawableComponent &&
+					((DrawableComponent)component).Visible)
+				{
+					((DrawableComponent)component).LoadContent();
+				}
+			}
+		}
+
 		public override void Update(GameTime gameTime)
 		{
 			base.Update(gameTime);
@@ -61,10 +65,10 @@ namespace Shooter
 			base.Draw(gameTime);
 			foreach (GameComponent component in Components)
 			{
-				if (component is DrawableGameComponent &&
-					((DrawableGameComponent)component).Visible)
+				if (component is DrawableComponent &&
+					((DrawableComponent)component).Visible)
 				{
-					((DrawableGameComponent)component).Draw(gameTime);
+					((DrawableComponent)component).Draw(gameTime);
 				}
 			}
 		}

@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Shooter
 {
-	public class Enemy : DrawableGameComponent
+	public class Enemy : DrawableComponent
 	{
 		// Animation representing the Enemy
 		public Texture2D EnemyTexture;
@@ -35,16 +35,13 @@ namespace Shooter
 			get { return EnemyTexture.Height; }
 		}
 
-		public Enemy(Game game, float size)
-			: base(game)
+		public Enemy(float size)
 		{
 			this.size = size;
 		}
 
-		public void Initialize(Texture2D texture, Vector2 position)
+		public void Initialize(Vector2 position)
 		{
-			EnemyTexture = texture;
-
 			// Set the position of the enemy
 			Position = position;
 
@@ -52,6 +49,15 @@ namespace Shooter
 			speed = rand.Next(1, 5) / 2f;
 
 			Active = true;
+
+			base.Initialize();
+		}
+
+		public override void LoadContent()
+		{
+			EnemyTexture = Game.Content.Load<Texture2D>("enemy");
+
+			base.LoadContent();
 		}
 
 		public override void Update(GameTime gameTime)

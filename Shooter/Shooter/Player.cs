@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Shooter
 {
-	class Player : DrawableGameComponent
+	class Player : DrawableComponent
 	{
 		public bool Active;
 
@@ -39,7 +39,6 @@ namespace Shooter
 		private SpriteBatch spriteBatch;
 
 		public Player(Game game, Vector2 position)
-			: base(game)
 		{
 			this.Active = true;
 			this.Size = 1;
@@ -48,10 +47,10 @@ namespace Shooter
 			this.position = position;
 		}
 
-		protected override void LoadContent()
+		public override void LoadContent()
 		{
 			PlayerTexture = Game.Content.Load<Texture2D>("Fish");
-
+			spriteBatch = new SpriteBatch(Globals.Graphics.GraphicsDevice);
 			base.LoadContent();
 		}
 

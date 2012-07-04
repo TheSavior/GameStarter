@@ -1,43 +1,65 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
 using Shooter.Screens;
 
 namespace Shooter
 {
-	public class ScreenManager : DrawableComponentManager
+	public class ScreenManager
 	{
 		ScreenBase activeScreen;
 
 		StartScreen startScreen;
 		ActionScreen actionScreen;
 
-		public ScreenManager(Game game)
-			: base(game)
-		{
-			startScreen = new StartScreen(this.Game);
-			startScreen.Hide();
-			Components.Add(startScreen);
+		List<ScreenBase> screens;
 
-			actionScreen = new ActionScreen(this.Game);
-			actionScreen.Hide();
-			Components.Add(actionScreen);
+		public ScreenManager()
+		{
+			startScreen = new StartScreen();
+			actionScreen = new ActionScreen();
+
+			screens = new List<ScreenBase>();
+			screens.Add(startScreen);
+			screens.Add(actionScreen);
 
 			activeScreen = startScreen;
-			activeScreen.Show();
 		}
 
-		public override void Draw(GameTime gameTime)
+		public void Initialize()
+		{
+			foreach (ScreenBase screen in screens)
+			{
+				screen.Initialize();
+			}
+		}
+
+		public void LoadContent()
+		{
+			foreach (ScreenBase screen in screens)
+			{
+				screen.LoadContent();
+			}
+		}
+
+		public void UnloadContent()
+		{
+			foreach (ScreenBase screen in screens)
+			{
+				screen.UnloadContent();
+			}
+		}
+
+		public void Update(GameTime gameTime)
+		{
+			activeScreen.Update(gameTime);
+		}
+
+		public void Draw(GameTime gameTime)
 		{
 			activeScreen.Draw(gameTime);
-			base.Draw(gameTime);
 		}
 
-		public void Navigate(Screen screen) 
+		public void Navigate(Screen screen)
 		{
 			activeScreen.Hide();
 			switch (screen)
