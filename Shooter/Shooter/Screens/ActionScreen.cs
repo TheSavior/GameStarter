@@ -200,7 +200,7 @@ namespace Shooter.Screens
 					// Collision, either game over or success eating
 					if (enemies[i].BoundingVector.Length() <= player.BoundingVector.Length())
 					{
-						//player.Eat(enemies[i].size);
+						player.Eat(enemies[i].BoundingVector.Length());
 						enemies[i].Active = false;
 					}
 					else

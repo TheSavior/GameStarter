@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -110,6 +111,19 @@ namespace Shooter.Actors
 
 		public void Eat(float enemySize)
 		{
+			// We should grow at some ratio of the enemy size to our current size
+			// First figure out what percent they are of us
+			var length = BoundingVector.Length();
+
+			Debug.WriteLine("Size Before: {0}", length);
+			var percent = enemySize / length;
+			var add = MathHelper.Lerp(0, 1, percent);
+
+			Scale.X += add * ScalingFactor.X;
+			Scale.Y += add * ScalingFactor.Y;
+
+			Debug.WriteLine("Size After: {0}", BoundingVector.Length());
+			Debug.WriteLine("");
 
 		}
 
