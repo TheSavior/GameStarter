@@ -42,7 +42,7 @@ namespace Shooter.Components
 		public override void LoadContent()
 		{
 			spriteBatch = new SpriteBatch(Globals.Graphics.GraphicsDevice);
-			spriteFont = Globals.Game.Content.Load<SpriteFont>("gameFont");
+			spriteFont = Game.Content.Load<SpriteFont>("gameFont");
 			MeasureMenu();
 
 			base.LoadContent();
@@ -63,8 +63,8 @@ namespace Shooter.Components
 			}
 
 			position = new Vector2(
-				(Globals.Game.Window.ClientBounds.Width - width) / 2,
-				(Globals.Game.Window.ClientBounds.Height - height) / 2);
+				(Game.Window.ClientBounds.Width - width) / 2,
+				(Game.Window.ClientBounds.Height - height) / 2);
 		}
 
 		public override void Initialize()

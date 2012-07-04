@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 
 
-namespace Shooter
+namespace Shooter.Screens
 {
 	public abstract class ScreenBase : DrawableComponentManager
 	{
@@ -9,25 +9,12 @@ namespace Shooter
 		{
 		}
 
-		public override void Initialize()
-		{
-			base.Initialize();
-
-			foreach (GameComponent component in Components)
-			{
-				if (component.Enabled == true)
-				{
-					component.Initialize();
-				}
-			}
-		}
-
-		public new virtual void LoadContent()
+		public override void LoadContent()
 		{
 			base.LoadContent();
 		}
 
-		public new virtual void UnloadContent()
+		public override void UnloadContent()
 		{
 			base.UnloadContent();
 		}

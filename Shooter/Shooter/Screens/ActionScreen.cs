@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Shooter.Actors;
+using Shooter.Popups;
 
 namespace Shooter.Screens
 {
@@ -31,12 +32,14 @@ namespace Shooter.Screens
 
 		SpriteBatch spriteBatch;
 
+		GameOverPopup popup;
+
 		public ActionScreen()
 		{
 			imageRectangle = new Rectangle(
 				0,
 				0,
-				Globals.Game.Window.ClientBounds.Width,
+				Game.Window.ClientBounds.Width,
 				Game.Window.ClientBounds.Height);
 
 			// Set the time keepers to zero
@@ -52,6 +55,18 @@ namespace Shooter.Screens
 			enemies = new List<Enemy>();
 		}
 
+		public override void Initialize()
+		{
+			// Initialize the player class
+			player = new Player();
+			Components.Add(player);
+
+			popup = new GameOverPopup();
+			Components.Add(popup);
+
+			base.Initialize();
+		}
+
 
 		public override void LoadContent()
 		{
@@ -59,11 +74,9 @@ namespace Shooter.Screens
 
 			image = Game.Content.Load<Texture2D>("greenmetal");
 
-			// Initialize the player class
-			player = new Player();
-			Components.Add(player);
-
+			// We need to LoadContent on the player before we set its position
 			base.LoadContent();
+
 			Vector2 playerPosition = new Vector2(0 + player.BoundingBox.Width / 2, Globals.Graphics.GraphicsDevice.Viewport.Height / 2);
 			player.SetPosition(playerPosition);
 		}
@@ -106,6 +119,8 @@ namespace Shooter.Screens
 			spriteBatch.End();
 
 			player.Draw(gameTime);
+
+			popup.Draw(gameTime);
 		}
 
 		private void AddEnemy()

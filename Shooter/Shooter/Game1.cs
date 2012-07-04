@@ -18,6 +18,7 @@ namespace Shooter
 		protected override void Initialize()
 		{
 			Globals.ScreenManager = new ScreenManager();
+			Globals.ScreenManager.Initialize();
 			base.Initialize();
 		}
 
