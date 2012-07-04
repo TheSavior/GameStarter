@@ -138,11 +138,11 @@ namespace Shooter.Screens
 			if (up) player.AddDirection(Direction.Up);
 			if (down) player.AddDirection(Direction.Down);
 
-			if (currentKeyboardState.IsKeyDown(Keys.A) && previousKeyboardState.IsKeyUp(Keys.A))
+			if (currentKeyboardState.IsKeyDown(Keys.A))
 			{
 				player.Bigger();
 			}
-			else if (currentKeyboardState.IsKeyDown(Keys.S) && previousKeyboardState.IsKeyUp(Keys.S))
+			else if (currentKeyboardState.IsKeyDown(Keys.S))
 			{
 				player.Smaller();
 			}
@@ -198,7 +198,7 @@ namespace Shooter.Screens
 				if (playerBounds.Intersects(enemyBounds))
 				{
 					// Collision, either game over or success eating
-					if (enemies[i].size <= player.Size)
+					if (enemies[i].BoundingVector.Length() <= player.BoundingVector.Length())
 					{
 						//player.Eat(enemies[i].size);
 						enemies[i].Active = false;

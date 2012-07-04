@@ -33,6 +33,16 @@ namespace Shooter.Actors
 			}
 		}
 
+		public Vector2 BoundingVector
+		{
+			get
+			{
+				return new Vector2(
+					BoundingBox.Width,
+					BoundingBox.Height);
+			}
+		}
+
 		public Enemy(float size)
 		{
 			this.size = size;

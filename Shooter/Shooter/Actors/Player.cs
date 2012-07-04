@@ -17,7 +17,7 @@ namespace Shooter.Actors
 		// Velocity of the Player
 		public Vector2 Velocity;
 
-		public float Size;
+		public Vector2 Scale;
 
 		private float increase_speed = .10f;
 		private float decrease_speed = .05f;
@@ -31,19 +31,31 @@ namespace Shooter.Actors
 			get
 			{
 				return new Rectangle(
-					(int)(position.X - (PlayerTexture.Width * Size) / 2),
-					(int)(position.Y - (PlayerTexture.Height * Size) / 2),
-					(int)(PlayerTexture.Width * Size),
-					(int)(PlayerTexture.Height * Size));
+					(int)(position.X - (PlayerTexture.Width + Scale.X) / 2),
+					(int)(position.Y - (PlayerTexture.Height + Scale.Y) / 2),
+					(int)(PlayerTexture.Width + Scale.X),
+					(int)(PlayerTexture.Height + Scale.Y));
 			}
 		}
 
-		protected Rectangle DestinationRectangle;
+		public Vector2 BoundingVector
+		{
+			get
+			{
+				return new Vector2(
+					BoundingBox.Width,
+					BoundingBox.Height);
+			}
+		}
+
+		// Unit vector pointing in the direction of the proportions of the
+		// Texture
+		protected Vector2 ScalingFactor;
 
 		public Player()
 		{
 			this.Active = true;
-			this.Size = 1;
+			this.Scale = new Vector2(1, 1);
 		}
 
 		/// <summary>
@@ -59,18 +71,24 @@ namespace Shooter.Actors
 		public override void LoadContent()
 		{
 			PlayerTexture = Game.Content.Load<Texture2D>("Fish");
+
+			ScalingFactor = new Vector2(PlayerTexture.Width, PlayerTexture.Height);
+			ScalingFactor.Normalize();
+
 			spriteBatch = new SpriteBatch(Globals.Graphics.GraphicsDevice);
 			base.LoadContent();
 		}
 
 		public void Bigger()
 		{
-			Size *= (float)Math.Sqrt(1.1);
+			Scale.X += 2f * ScalingFactor.X;
+			Scale.Y += 2f * ScalingFactor.Y;
 		}
 
 		public void Smaller()
 		{
-			Size /= (float)Math.Sqrt(0.9);
+			Scale.X -= 2f * ScalingFactor.X;
+			Scale.Y -= 2f * ScalingFactor.Y;
 		}
 
 		public override void Update(GameTime gameTime)
@@ -83,11 +101,10 @@ namespace Shooter.Actors
 		public override void Draw(GameTime gameTime)
 		{
 			// Center of the texture origin
-			var origin = new Vector2(PlayerTexture.Width / 2, PlayerTexture.Height / 2);
+			var origin = Vector2.Zero;
 
 			spriteBatch.Begin();
-			//spriteBatch.Draw(PlayerTexture, BoundingBox, null, Color.White, 0f, origin, SpriteEffects.None, 0f);
-			spriteBatch.Draw(PlayerTexture, position, null, Color.White, 0f, origin, Size, SpriteEffects.None, 0f);
+			spriteBatch.Draw(PlayerTexture, BoundingBox, null, Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0f);
 			spriteBatch.End();
 		}
 
@@ -100,28 +117,28 @@ namespace Shooter.Actors
 		{
 			position.X += Velocity.X;
 			if (
-				position.X < 0 ||
-				position.X > Game.GraphicsDevice.Viewport.Width - PlayerTexture.Width)
+				position.X < BoundingBox.Width / 2 ||
+				position.X > Game.GraphicsDevice.Viewport.Width - BoundingBox.Width / 2)
 			{
 				Velocity.X = 0;
 			}
 			position.X = MathHelper.Clamp(
 				position.X,
-				0,
-				Game.GraphicsDevice.Viewport.Width - PlayerTexture.Width);
+				0 + BoundingBox.Width / 2,
+				Game.GraphicsDevice.Viewport.Width - BoundingBox.Width / 2);
 
 			position.Y += Velocity.Y;
 
 
-			if (position.Y < 0 ||
-				position.Y > Game.GraphicsDevice.Viewport.Height - PlayerTexture.Height)
+			if (position.Y < 0 + BoundingBox.Height / 2 ||
+				position.Y > Game.GraphicsDevice.Viewport.Height - BoundingBox.Height / 2)
 			{
 				Velocity.Y = 0;
 			}
 			position.Y = MathHelper.Clamp(
 				position.Y,
-				0,
-				position.Y = Game.GraphicsDevice.Viewport.Height - PlayerTexture.Height);
+				0 + BoundingBox.Height / 2,
+				position.Y = Game.GraphicsDevice.Viewport.Height - BoundingBox.Height / 2);
 		}
 
 		public void AddDirection(Direction direction)
