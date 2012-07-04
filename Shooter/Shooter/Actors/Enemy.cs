@@ -9,7 +9,7 @@ namespace Shooter.Actors
 		// Animation representing the Enemy
 		public Texture2D EnemyTexture;
 
-		// The position of the enemy ship relative to the top left corner of thescreen
+		// The position of the enemy ship relative to the top left corner of the screen
 		public Vector2 Position;
 
 		// The amount of score the enemy will give to the player
@@ -21,18 +21,16 @@ namespace Shooter.Actors
 
 		public bool Active;
 
-		// Get the width of the enemy ship
-
-
-		public int ScaledWidth
+		public Rectangle BoundingBox
 		{
-			get { return EnemyTexture.Width; }
-		}
-
-		// Get the height of the enemy ship
-		public int ScaledHeight
-		{
-			get { return EnemyTexture.Height; }
+			get
+			{
+				return new Rectangle(
+					(int)Position.X - EnemyTexture.Width / 2,
+					(int)Position.Y - EnemyTexture.Height / 2,
+					EnemyTexture.Width,
+					EnemyTexture.Height);
+			}
 		}
 
 		public Enemy(float size)
@@ -62,13 +60,13 @@ namespace Shooter.Actors
 
 		public override void Update(GameTime gameTime)
 		{
-			// The enemy always moves to the left so decrement it's xposition
+			// The enemy always moves to the left so decrement it's x position
 			Position.X -= speed;
 
-			// If the enemy is past the screen then deactivateit
-			if (Position.X < -ScaledWidth)
+			// If the enemy is past the screen then deactivate it
+			if (Position.X < -BoundingBox.Width)
 			{
-				// By setting the Active flag to false, the game will remove this objet fromthe 
+				// By setting the Active flag to false, the game will remove this objet from the
 				// active game list
 				Active = false;
 			}
@@ -76,9 +74,8 @@ namespace Shooter.Actors
 
 		public void Draw(SpriteBatch spriteBatch)
 		{
-			spriteBatch.Draw(EnemyTexture, Position, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+			var origin = new Vector2(BoundingBox.Width / 2, BoundingBox.Height / 2);
+			spriteBatch.Draw(EnemyTexture, Position, null, Color.White, 0f, origin, 1f, SpriteEffects.None, 0f);
 		}
-
-
 	}
 }

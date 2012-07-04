@@ -42,7 +42,7 @@ namespace Shooter.Screens
 			previousSpawnTime = TimeSpan.Zero;
 
 			// Used to determine how fast enemy respawns
-			enemySpawnTime = TimeSpan.FromSeconds(1.0f);
+			enemySpawnTime = TimeSpan.FromSeconds(0.5f);
 
 			// Initialize our random number generator
 			random = new Random();
@@ -55,15 +55,16 @@ namespace Shooter.Screens
 		public override void LoadContent()
 		{
 			spriteBatch = new SpriteBatch(Globals.Graphics.GraphicsDevice);
+
 			image = Game.Content.Load<Texture2D>("greenmetal");
 
-			Vector2 playerPosition = new Vector2(0, Globals.Graphics.GraphicsDevice.Viewport.Height / 2);
-
 			// Initialize the player class
-			player = new Player(this.Game, playerPosition);
+			player = new Player();
 			Components.Add(player);
 
 			base.LoadContent();
+			Vector2 playerPosition = new Vector2(0 + player.BoundingBox.Width / 2, Globals.Graphics.GraphicsDevice.Viewport.Height / 2);
+			player.SetPosition(playerPosition);
 		}
 
 		public override void Update(GameTime gameTime)
@@ -85,15 +86,18 @@ namespace Shooter.Screens
 
 		public override void Draw(GameTime gameTime)
 		{
-			base.Draw(gameTime);
-
 			spriteBatch.Begin();
+			spriteBatch.Draw(image, imageRectangle, Color.White);
+
 			// Draw the Enemies
 			for (int i = 0; i < enemies.Count; i++)
 			{
 				enemies[i].Draw(spriteBatch);
 			}
+
 			spriteBatch.End();
+
+			player.Draw(gameTime);
 		}
 
 		private void AddEnemy()
@@ -163,23 +167,18 @@ namespace Shooter.Screens
 		{
 			// Use the Rectangle's built-in intersect function to 
 			// determine if two objects are overlapping
-			Rectangle rectangle1;
-			Rectangle rectangle2;
+			Rectangle playerBounds = player.BoundingBox;
+			Rectangle enemyBounds;
 
-			// Only create the rectangle once for the player
-			rectangle1 = player.Bounds;
 
 			// Do the collision between the player and the enemies
 			for (int i = 0; i < enemies.Count; i++)
 			{
-				rectangle2 = new Rectangle((int)enemies[i].Position.X,
-				(int)enemies[i].Position.Y,
-				enemies[i].ScaledWidth,
-				enemies[i].ScaledHeight);
+				enemyBounds = enemies[i].BoundingBox;
 
 				// Determine if the two objects collided with each
 				// other
-				if (rectangle1.Intersects(rectangle2))
+				if (playerBounds.Intersects(enemyBounds))
 				{
 					// Collision, either game over or success eating
 					if (enemies[i].size <= player.Size)

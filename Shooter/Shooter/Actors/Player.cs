@@ -22,15 +22,15 @@ namespace Shooter.Actors
 		private float increase_speed = .10f;
 		private float decrease_speed = .05f;
 
-		private float max_speed = 5f;
+		private float max_speed = 3f;
 
-		public Rectangle Bounds
+		public Rectangle BoundingBox
 		{
 			get
 			{
 				return new Rectangle(
-					(int)position.X,
-					(int)position.Y,
+					(int)position.X - PlayerTexture.Width / 2,
+					(int)position.Y - PlayerTexture.Height / 2,
 					PlayerTexture.Width,
 					PlayerTexture.Height);
 			}
@@ -38,11 +38,18 @@ namespace Shooter.Actors
 
 		private SpriteBatch spriteBatch;
 
-		public Player(Game game, Vector2 position)
+		public Player()
 		{
 			this.Active = true;
 			this.Size = 1;
+		}
 
+		/// <summary>
+		/// Sets the center of the player
+		/// </summary>
+		/// <param name="position"></param>
+		public void SetPosition(Vector2 position)
+		{
 			// Set the starting position of the player around the middle of the screen and to the back
 			this.position = position;
 		}
@@ -63,8 +70,11 @@ namespace Shooter.Actors
 
 		public override void Draw(GameTime gameTime)
 		{
+			// Center the player
+			var origin = new Vector2(BoundingBox.Width / 2, BoundingBox.Height / 2);
+
 			spriteBatch.Begin();
-			spriteBatch.Draw(PlayerTexture, position, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+			spriteBatch.Draw(PlayerTexture, position, null, Color.White, 0f, origin, 1f, SpriteEffects.None, 0f);
 			spriteBatch.End();
 		}
 
