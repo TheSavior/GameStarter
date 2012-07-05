@@ -10,14 +10,11 @@ namespace Shooter.Actors
 		// Animation representing the player
 		public Texture2D Texture;
 
-		// Position of the Player relative to the upper left side of the screen
-		protected Vector2 Position;
+		// Position of the center of the Actor
+		// relative to the upper left side of the screen
+		public Vector2 Position;
 
-		public Vector2 Scale;
-
-		// Unit vector pointing in the direction of the proportions of the
-		// Texture
-		protected Vector2 ScalingFactor;
+		public float Scale;
 
 		protected SpriteBatch spriteBatch;
 
@@ -26,10 +23,10 @@ namespace Shooter.Actors
 			get
 			{
 				return new Rectangle(
-					(int)(Position.X - (Texture.Width + Scale.X) / 2),
-					(int)(Position.Y - (Texture.Height + Scale.Y) / 2),
-					(int)(Texture.Width + Scale.X),
-					(int)(Texture.Height + Scale.Y));
+					(int)(Position.X - (Texture.Width * Scale) / 2),
+					(int)(Position.Y - (Texture.Height * Scale) / 2),
+					(int)(Texture.Width * Scale),
+					(int)(Texture.Height * Scale));
 			}
 		}
 
@@ -45,7 +42,7 @@ namespace Shooter.Actors
 
 		public ActorBase()
 		{
-			this.Scale = new Vector2(1, 1);
+			this.Scale = 1f;
 		}
 
 		/// <summary>
@@ -65,9 +62,6 @@ namespace Shooter.Actors
 		public override void LoadContent()
 		{
 			spriteBatch = new SpriteBatch(Globals.Graphics.GraphicsDevice);
-
-			ScalingFactor = new Vector2(Texture.Width, Texture.Height);
-			ScalingFactor.Normalize();
 
 			base.LoadContent();
 		}

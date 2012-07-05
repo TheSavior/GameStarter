@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Shooter.Actors;
+using Shooter.Extensions;
 using Shooter.Popups;
 
 namespace Shooter.Screens
@@ -142,7 +143,7 @@ namespace Shooter.Screens
 		private void AddEnemy()
 		{
 			// Create an enemy
-			var size = (float)(random.NextDouble() * 100 - 40);
+			var size = (float)(random.NextDouble() + .5);
 			Debug.WriteLine("Enemy size {0}", size);
 			Enemy enemy = new Enemy();
 
@@ -222,25 +223,64 @@ namespace Shooter.Screens
 			Rectangle playerBounds = player.BoundingBox;
 			Rectangle enemyBounds;
 
+			Color[,] playerColors = player.Texture.ToColorArray();
+			Color[,] enemyColors;
 
 			// Do the collision between the player and the enemies
 			for (int i = 0; i < enemies.Count; i++)
 			{
 				enemyBounds = enemies[i].BoundingBox;
+				enemyColors = enemies[i].Texture.ToColorArray();
 
 				// Determine if the two objects collided with each
 				// other
 				if (playerBounds.Intersects(enemyBounds))
 				{
-					// Collision, either game over or success eating
-					if (enemies[i].BoundingVector.Length() <= player.BoundingVector.Length())
+					// Possible collision, lets start checking every pixel
+					for (int x1 = 0; x1 < playerBounds.Width; x1++)
 					{
-						player.Eat(enemies[i].BoundingVector.Length());
-						enemies[i].Active = false;
-					}
-					else
-					{
-						player.Active = false;
+						for (int y1 = 0; y1 < playerBounds.Height; y1++)
+						{
+							// Scaled pixel position of player
+							Vector2 playerScaledPixelPos = new Vector2(x1, y1);
+
+							Vector2 realWorldPixelPos = playerScaledPixelPos + new Vector2(playerBounds.X, playerBounds.Y);
+
+							// Find the location of this pixel on the original texture
+							// by dividing the scaled one by the scale
+							Vector2 playerTexturePixelPos = playerScaledPixelPos / player.Scale;
+
+							// Given an x and y, figure out if the enemy bounds contains it
+							// if yes, find the position of that location relative to the top left of
+							// the enemies bounding box. Then scale that down by enemies scale
+							if (enemyBounds.Contains((int)realWorldPixelPos.X, (int)realWorldPixelPos.Y))
+							{
+								// it is inside the enemy box
+								Vector2 enemyScaledPixelPos = realWorldPixelPos - new Vector2(enemyBounds.X, enemyBounds.Y);
+								Vector2 enemyTexturePixelPos = enemyScaledPixelPos / enemies[i].Scale;
+
+
+								if (playerColors[(int)playerTexturePixelPos.X, (int)playerTexturePixelPos.Y].A > 0)
+								{
+									if (enemyColors[(int)enemyTexturePixelPos.X, (int)enemyTexturePixelPos.Y].A > 0)
+									{
+
+										// Collision, either game over or success eating
+										if (enemies[i].BoundingVector.Length() <= player.BoundingVector.Length())
+										{
+											player.Eat(enemies[i].BoundingVector.Length());
+											enemies[i].Active = false;
+										}
+										else
+										{
+											player.Active = false;
+										}
+										return;
+
+									}
+								}
+							}
+						}
 					}
 				}
 			}

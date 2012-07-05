@@ -28,14 +28,12 @@ namespace Shooter.Actors
 
 		public void Bigger()
 		{
-			Scale.X += 2f * ScalingFactor.X;
-			Scale.Y += 2f * ScalingFactor.Y;
+			Scale += .05f;
 		}
 
 		public void Smaller()
 		{
-			Scale.X -= 2f * ScalingFactor.X;
-			Scale.Y -= 2f * ScalingFactor.Y;
+			Scale -= .05f;
 		}
 
 		public override void Update(GameTime gameTime)
@@ -62,8 +60,7 @@ namespace Shooter.Actors
 			var percent = enemySize / length;
 			var add = MathHelper.Lerp(0, 1, percent);
 
-			Scale.X += add * ScalingFactor.X;
-			Scale.Y += add * ScalingFactor.Y;
+			Scale += add;
 
 			Debug.WriteLine("Size After: {0}", BoundingVector.Length());
 			Debug.WriteLine("");

@@ -110,6 +110,7 @@
   <ItemGroup>
     <Compile Include="Actors\ActorBase.cs" />
     <Compile Include="DrawableComponent.cs" />
+    <Compile Include="Extensions\Texture2DExtensions.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="Popups\GameOverPopup.cs" />
     <Compile Include="Popups\PopupBase.cs" />

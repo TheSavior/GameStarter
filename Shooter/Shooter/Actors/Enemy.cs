@@ -10,7 +10,7 @@ namespace Shooter.Actors
 
 		private Random rand;
 
-		public void Initialize()
+		public override void Initialize()
 		{
 			rand = new Random();
 			speed = rand.Next(1, 5) / 2f;
@@ -29,8 +29,7 @@ namespace Shooter.Actors
 
 		public void SetSize(float size)
 		{
-			Scale.X = size * ScalingFactor.X;
-			Scale.Y = size * ScalingFactor.Y;
+			Scale = size;
 		}
 
 		public override void Update(GameTime gameTime)
