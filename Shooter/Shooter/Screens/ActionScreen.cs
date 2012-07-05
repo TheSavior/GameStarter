@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -62,6 +63,7 @@ namespace Shooter.Screens
 			Components.Add(player);
 
 			popup = new GameOverPopup();
+			popup.Visible = false;
 			Components.Add(popup);
 
 			base.Initialize();
@@ -91,14 +93,28 @@ namespace Shooter.Screens
 				previousKeyboardState = currentKeyboardState;
 			}
 
-			// Update the player
-			UpdatePlayer(gameTime);
+			if (!player.Active || currentKeyboardState.IsKeyDown(Keys.C) && previousKeyboardState.IsKeyUp(Keys.C))
+			{
+				popup.Visible = true;
+				player.Enabled = false;
+			}
+			else if (currentKeyboardState.IsKeyDown(Keys.V) && previousKeyboardState.IsKeyUp(Keys.V))
+			{
+				popup.Visible = false;
+				player.Enabled = true;
+			}
 
-			// Update the enemies
-			UpdateEnemies(gameTime);
+			if (player.Enabled)
+			{
+				// Update the player
+				UpdatePlayer(gameTime);
 
-			// Update the collision
-			UpdateCollision();
+				// Update the enemies
+				UpdateEnemies(gameTime);
+
+				// Update the collision
+				UpdateCollision();
+			}
 
 			base.Update(gameTime);
 
@@ -120,21 +136,25 @@ namespace Shooter.Screens
 
 			player.Draw(gameTime);
 
-			popup.Draw(gameTime);
+			base.Draw(gameTime);
 		}
 
 		private void AddEnemy()
 		{
 			// Create an enemy
-			Enemy enemy = new Enemy(1);
+			var size = (float)(random.NextDouble() * 100 - 40);
+			Debug.WriteLine("Enemy size {0}", size);
+			Enemy enemy = new Enemy();
 
 			// Randomly generate the position of the enemy
 			var viewport = Globals.Graphics.GraphicsDevice.Viewport;
 			Vector2 position = new Vector2(viewport.Width, random.Next(100, viewport.Height - 100));
 
 			// Initialize the enemy
-			enemy.Initialize(position);
+			enemy.Initialize();
 			enemy.LoadContent();
+			enemy.SetPosition(position);
+			enemy.SetSize(size);
 
 			// Add the enemy to the active enemies list
 			enemies.Add(enemy);

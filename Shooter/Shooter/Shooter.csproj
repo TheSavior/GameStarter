@@ -108,6 +108,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actors\ActorBase.cs" />
     <Compile Include="DrawableComponent.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="Popups\GameOverPopup.cs" />

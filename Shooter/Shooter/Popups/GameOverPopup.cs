@@ -11,13 +11,16 @@ namespace Shooter.Popups
 
 		SpriteBatch spriteBatch;
 
+		SpriteFont font;
+
 		public GameOverPopup()
 		{
+			var padding = 100;
 			drawRectangle = new Rectangle(
-				20,
-				20,
-				Game.Window.ClientBounds.Width - 40,
-				Game.Window.ClientBounds.Height - 40);
+				padding,
+				padding,
+				Game.Window.ClientBounds.Width - padding * 2,
+				Game.Window.ClientBounds.Height - padding * 2);
 		}
 
 		public override void Initialize()
@@ -29,6 +32,9 @@ namespace Shooter.Popups
 		{
 			spriteBatch = new SpriteBatch(Globals.Graphics.GraphicsDevice);
 			image = Content.Load<Texture2D>("alienmetal");
+
+			font = Game.Content.Load<SpriteFont>("gameFont");
+
 			base.LoadContent();
 		}
 
@@ -36,6 +42,17 @@ namespace Shooter.Popups
 		{
 			spriteBatch.Begin();
 			spriteBatch.Draw(image, drawRectangle, Color.White);
+
+			var str = "Game Over";
+
+			Vector2 size = font.MeasureString(str);
+
+			var position = new Vector2(
+				(drawRectangle.Width - size.X) / 2 + drawRectangle.X,
+				(drawRectangle.Height - size.Y) / 2 + drawRectangle.Y);
+
+			spriteBatch.DrawString(font, "Game Over", position, Color.Black);
+
 			spriteBatch.End();
 
 			base.Draw(gameTime);

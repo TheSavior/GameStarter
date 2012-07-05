@@ -91,6 +91,12 @@ namespace Shooter.Components
 				_selectedIndex--;
 			}
 			_selectedIndex = _selectedIndex % menuItems.Length;
+			// This can happen with mod because it is in the range -x to x
+			// not true mod (remainder in c# and c++)
+			if (_selectedIndex < 0)
+			{
+				_selectedIndex += menuItems.Length;
+			}
 
 			base.Update(gameTime);
 

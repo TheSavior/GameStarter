@@ -4,55 +4,14 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Shooter.Actors
 {
-	public class Enemy : DrawableComponent
+	public class Enemy : ActorBase
 	{
-		// Animation representing the Enemy
-		public Texture2D EnemyTexture;
-
-		// The position of the enemy ship relative to the top left corner of the screen
-		public Vector2 Position;
-
-		// The amount of score the enemy will give to the player
-		public float size;
-
 		private float speed;
 
 		private Random rand;
 
-		public bool Active;
-
-		public Rectangle BoundingBox
+		public void Initialize()
 		{
-			get
-			{
-				return new Rectangle(
-					(int)Position.X - EnemyTexture.Width / 2,
-					(int)Position.Y - EnemyTexture.Height / 2,
-					EnemyTexture.Width,
-					EnemyTexture.Height);
-			}
-		}
-
-		public Vector2 BoundingVector
-		{
-			get
-			{
-				return new Vector2(
-					BoundingBox.Width,
-					BoundingBox.Height);
-			}
-		}
-
-		public Enemy(float size)
-		{
-			this.size = size;
-		}
-
-		public void Initialize(Vector2 position)
-		{
-			// Set the position of the enemy
-			Position = position;
-
 			rand = new Random();
 			speed = rand.Next(1, 5) / 2f;
 
@@ -63,9 +22,15 @@ namespace Shooter.Actors
 
 		public override void LoadContent()
 		{
-			EnemyTexture = Game.Content.Load<Texture2D>("enemy");
+			Texture = Game.Content.Load<Texture2D>("enemy");
 
 			base.LoadContent();
+		}
+
+		public void SetSize(float size)
+		{
+			Scale.X = size * ScalingFactor.X;
+			Scale.Y = size * ScalingFactor.Y;
 		}
 
 		public override void Update(GameTime gameTime)
@@ -80,12 +45,14 @@ namespace Shooter.Actors
 				// active game list
 				Active = false;
 			}
+
+			base.Update(gameTime);
 		}
 
 		public void Draw(SpriteBatch spriteBatch)
 		{
-			var origin = new Vector2(BoundingBox.Width / 2, BoundingBox.Height / 2);
-			spriteBatch.Draw(EnemyTexture, Position, null, Color.White, 0f, origin, 1f, SpriteEffects.None, 0f);
+			//Debug.WriteLine("Size: " + BoundingVector.Length());
+			spriteBatch.Draw(Texture, BoundingBox, Color.White);
 		}
 	}
 }

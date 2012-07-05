@@ -26,10 +26,7 @@ namespace Shooter
 
 			foreach (GameComponent component in Components)
 			{
-				if (component.Enabled == true)
-				{
-					component.Initialize();
-				}
+				component.Initialize();
 			}
 		}
 
@@ -39,8 +36,7 @@ namespace Shooter
 
 			foreach (GameComponent component in Components)
 			{
-				if (component is DrawableComponent &&
-					((DrawableComponent)component).Visible)
+				if (component is DrawableComponent)
 				{
 					((DrawableComponent)component).LoadContent();
 				}
