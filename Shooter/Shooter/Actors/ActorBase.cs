@@ -18,6 +18,12 @@ namespace Shooter.Actors
 
 		protected SpriteBatch spriteBatch;
 
+		public Direction DrawDirection
+		{
+			get;
+			protected set;
+		}
+
 		public Rectangle BoundingBox
 		{
 			get
@@ -45,14 +51,10 @@ namespace Shooter.Actors
 			this.Scale = 1f;
 		}
 
-		/// <summary>
-		/// Sets the center of the player
-		/// </summary>
-		/// <param name="position"></param>
-		public void SetPosition(Vector2 position)
+		public override void Initialize()
 		{
-			// Set the starting position of the player around the middle of the screen and to the back
-			this.Position = position;
+			DrawDirection = Direction.Right;
+			base.Initialize();
 		}
 
 		/// <summary>
@@ -64,6 +66,28 @@ namespace Shooter.Actors
 			spriteBatch = new SpriteBatch(Globals.Graphics.GraphicsDevice);
 
 			base.LoadContent();
+		}
+
+		public override void Draw(GameTime gameTime)
+		{
+			spriteBatch.Begin();
+			SpriteEffects effect = SpriteEffects.None;
+			if (DrawDirection == Direction.Left)
+			{
+				effect = SpriteEffects.FlipHorizontally;
+			}
+			spriteBatch.Draw(Texture, BoundingBox, null, Color.White, 0f, Vector2.Zero, effect, 0);
+			spriteBatch.End();
+		}
+
+		/// <summary>
+		/// Sets the center of the player
+		/// </summary>
+		/// <param name="position"></param>
+		public void SetPosition(Vector2 position)
+		{
+			// Set the starting position of the player around the middle of the screen and to the back
+			this.Position = position;
 		}
 	}
 }

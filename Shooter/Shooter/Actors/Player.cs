@@ -43,13 +43,6 @@ namespace Shooter.Actors
 			base.Update(gameTime);
 		}
 
-		public override void Draw(GameTime gameTime)
-		{
-			spriteBatch.Begin();
-			spriteBatch.Draw(Texture, BoundingBox, Color.White);
-			spriteBatch.End();
-		}
-
 		public void Eat(float enemySize)
 		{
 			// We should grow at some ratio of the enemy size to our current size
@@ -100,9 +93,11 @@ namespace Shooter.Actors
 			switch (direction)
 			{
 				case Direction.Right:
+					DrawDirection = Direction.Right;
 					Velocity.X += increase_speed;
 					break;
 				case Direction.Left:
+					DrawDirection = Direction.Left;
 					Velocity.X -= increase_speed;
 					break;
 				case Direction.Up:

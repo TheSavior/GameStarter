@@ -47,11 +47,5 @@ namespace Shooter.Actors
 
 			base.Update(gameTime);
 		}
-
-		public void Draw(SpriteBatch spriteBatch)
-		{
-			//Debug.WriteLine("Size: " + BoundingVector.Length());
-			spriteBatch.Draw(Texture, BoundingBox, Color.White);
-		}
 	}
 }

@@ -126,14 +126,13 @@ namespace Shooter.Screens
 		{
 			spriteBatch.Begin();
 			spriteBatch.Draw(image, imageRectangle, Color.White);
+			spriteBatch.End();
 
 			// Draw the Enemies
 			for (int i = 0; i < enemies.Count; i++)
 			{
-				enemies[i].Draw(spriteBatch);
+				enemies[i].Draw(gameTime);
 			}
-
-			spriteBatch.End();
 
 			player.Draw(gameTime);
 
@@ -236,15 +235,20 @@ namespace Shooter.Screens
 				// other
 				if (playerBounds.Intersects(enemyBounds))
 				{
-					// Possible collision, lets start checking every pixel
-					for (int x1 = 0; x1 < playerBounds.Width; x1++)
-					{
-						for (int y1 = 0; y1 < playerBounds.Height; y1++)
-						{
-							// Scaled pixel position of player
-							Vector2 playerScaledPixelPos = new Vector2(x1, y1);
+					// The two big rectangles intersect, lets grab just
+					// the rectangle where they intersect
+					Rectangle collisionRectangle = Rectangle.Intersect(playerBounds, enemyBounds);
 
-							Vector2 realWorldPixelPos = playerScaledPixelPos + new Vector2(playerBounds.X, playerBounds.Y);
+					// Possible collision, lets start checking every pixel
+					for (int x1 = 0; x1 < collisionRectangle.Width; x1++)
+					{
+						for (int y1 = 0; y1 < collisionRectangle.Height; y1++)
+						{
+							// Where is this pixel in the whole screen
+							Vector2 realWorldPixelPos = new Vector2(collisionRectangle.X + x1, collisionRectangle.Y + y1);
+
+							// Scaled pixel position of player
+							Vector2 playerScaledPixelPos = realWorldPixelPos - new Vector2(playerBounds.X, playerBounds.Y);
 
 							// Find the location of this pixel on the original texture
 							// by dividing the scaled one by the scale
@@ -259,8 +263,14 @@ namespace Shooter.Screens
 								Vector2 enemyScaledPixelPos = realWorldPixelPos - new Vector2(enemyBounds.X, enemyBounds.Y);
 								Vector2 enemyTexturePixelPos = enemyScaledPixelPos / enemies[i].Scale;
 
+								// Lets handle flipping
+								int playerTextureWithFlip = (int)playerTexturePixelPos.X;
+								if (player.DrawDirection == Direction.Left)
+								{
+									playerTextureWithFlip = player.Texture.Width - playerTextureWithFlip - 1;
+								}
 
-								if (playerColors[(int)playerTexturePixelPos.X, (int)playerTexturePixelPos.Y].A > 0)
+								if (playerColors[playerTextureWithFlip, (int)playerTexturePixelPos.Y].A > 0)
 								{
 									if (enemyColors[(int)enemyTexturePixelPos.X, (int)enemyTexturePixelPos.Y].A > 0)
 									{
