@@ -32,17 +32,20 @@ namespace Shooter.Screens
 		KeyboardState previousKeyboardState;
 		KeyboardState currentKeyboardState;
 
-		SpriteBatch spriteBatch;
-
 		GameOverPopup popup;
+
+		Camera2D camera;
+		float zoomIncrement = .1f;
+
+		int previousScroll;
 
 		public ActionScreen()
 		{
 			imageRectangle = new Rectangle(
 				0,
 				0,
-				Game.Window.ClientBounds.Width,
-				Game.Window.ClientBounds.Height);
+				Globals.Graphics.GraphicsDevice.Viewport.Width,
+				Globals.Graphics.GraphicsDevice.Viewport.Height);
 
 			// Set the time keepers to zero
 			previousSpawnTime = TimeSpan.Zero;
@@ -59,6 +62,12 @@ namespace Shooter.Screens
 
 		public override void Initialize()
 		{
+			camera = new Camera2D(
+				Globals.Graphics.GraphicsDevice.Viewport,
+				Globals.Graphics.GraphicsDevice.Viewport.Width,
+				Globals.Graphics.GraphicsDevice.Viewport.Height,
+				2f);
+
 			// Initialize the player class
 			player = new Player();
 			Components.Add(player);
@@ -73,8 +82,6 @@ namespace Shooter.Screens
 
 		public override void LoadContent()
 		{
-			spriteBatch = new SpriteBatch(Globals.Graphics.GraphicsDevice);
-
 			image = Game.Content.Load<Texture2D>("greenmetal");
 
 			// We need to LoadContent on the player before we set its position
@@ -105,7 +112,32 @@ namespace Shooter.Screens
 				player.Enabled = true;
 			}
 
-			if (player.Enabled)
+			MouseState mouseStateCurrent = Mouse.GetState();
+			// Adjust zoom if the mouse wheel has moved
+			if (mouseStateCurrent.ScrollWheelValue > previousScroll)
+				camera.Zoom += zoomIncrement;
+			else if (mouseStateCurrent.ScrollWheelValue < previousScroll)
+				camera.Zoom -= zoomIncrement;
+
+			previousScroll = mouseStateCurrent.ScrollWheelValue;
+
+			// Move the camera when the arrow keys are pressed
+			Vector2 movement = Vector2.Zero;
+			Viewport vp = Globals.Graphics.GraphicsDevice.Viewport;
+
+			if (currentKeyboardState.IsKeyDown(Keys.NumPad4))
+				movement.X--;
+			if (currentKeyboardState.IsKeyDown(Keys.NumPad6))
+				movement.X++;
+			if (currentKeyboardState.IsKeyDown(Keys.NumPad8))
+				movement.Y--;
+			if (currentKeyboardState.IsKeyDown(Keys.NumPad2))
+				movement.Y++;
+
+			//camera.Pos += movement * 20;
+			camera.Pos = player.Position;
+
+			if (player.Active)
 			{
 				// Update the player
 				UpdatePlayer(gameTime);
@@ -124,9 +156,12 @@ namespace Shooter.Screens
 
 		public override void Draw(GameTime gameTime)
 		{
-			spriteBatch.Begin();
-			spriteBatch.Draw(image, imageRectangle, Color.White);
-			spriteBatch.End();
+
+			Globals.SpriteBatch.Begin(SpriteSortMode.Deferred,
+					null, null, null, null, null,
+					camera.GetTransformation());
+
+			Globals.SpriteBatch.Draw(image, imageRectangle, Color.White);
 
 			// Draw the Enemies
 			for (int i = 0; i < enemies.Count; i++)
@@ -136,7 +171,14 @@ namespace Shooter.Screens
 
 			player.Draw(gameTime);
 
-			base.Draw(gameTime);
+			Globals.SpriteBatch.End();
+
+			Globals.SpriteBatch.Begin();
+			if (!player.Active)
+			{
+				popup.Draw(gameTime);
+			}
+			Globals.SpriteBatch.End();
 		}
 
 		private void AddEnemy()
@@ -146,13 +188,14 @@ namespace Shooter.Screens
 			Debug.WriteLine("Enemy size {0}", size);
 			Enemy enemy = new Enemy();
 
-			// Randomly generate the position of the enemy
-			var viewport = Globals.Graphics.GraphicsDevice.Viewport;
-			Vector2 position = new Vector2(viewport.Width, random.Next(100, viewport.Height - 100));
-
 			// Initialize the enemy
 			enemy.Initialize();
 			enemy.LoadContent();
+
+			// Randomly generate the position of the enemy
+			var viewport = Globals.Graphics.GraphicsDevice.Viewport;
+			Vector2 position = new Vector2(viewport.Width + enemy.BoundingBox.Width, random.Next(100, viewport.Height - 100));
+
 			enemy.SetPosition(position);
 			enemy.SetSize(size);
 

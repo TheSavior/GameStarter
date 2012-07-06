@@ -19,6 +19,8 @@ namespace Shooter
 		{
 			Globals.ScreenManager = new ScreenManager();
 			Globals.ScreenManager.Initialize();
+			Globals.SpriteBatch = new SpriteBatch(Globals.Graphics.GraphicsDevice);
+
 			base.Initialize();
 		}
 

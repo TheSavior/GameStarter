@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Shooter.Actors
 {
-	public class ActorBase : DrawableComponent
+	public class ActorBase : DrawableComponentManager
 	{
 		public bool Active;
 
@@ -15,8 +15,6 @@ namespace Shooter.Actors
 		public Vector2 Position;
 
 		public float Scale;
-
-		protected SpriteBatch spriteBatch;
 
 		public Direction DrawDirection
 		{
@@ -57,27 +55,15 @@ namespace Shooter.Actors
 			base.Initialize();
 		}
 
-		/// <summary>
-		/// Load actor content
-		/// </summary>
-		/// <remarks>The Texture must be set when this is called</remarks>
-		public override void LoadContent()
-		{
-			spriteBatch = new SpriteBatch(Globals.Graphics.GraphicsDevice);
-
-			base.LoadContent();
-		}
-
 		public override void Draw(GameTime gameTime)
 		{
-			spriteBatch.Begin();
 			SpriteEffects effect = SpriteEffects.None;
 			if (DrawDirection == Direction.Left)
 			{
 				effect = SpriteEffects.FlipHorizontally;
 			}
-			spriteBatch.Draw(Texture, BoundingBox, null, Color.White, 0f, Vector2.Zero, effect, 0);
-			spriteBatch.End();
+			Globals.SpriteBatch.Draw(Texture, BoundingBox, null, Color.White, 0f, Vector2.Zero, effect, 0);
+			base.Draw(gameTime);
 		}
 
 		/// <summary>

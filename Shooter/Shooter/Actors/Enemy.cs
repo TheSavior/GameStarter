@@ -38,7 +38,7 @@ namespace Shooter.Actors
 			Position.X -= speed;
 
 			// If the enemy is past the screen then deactivate it
-			if (Position.X < -BoundingBox.Width)
+			if (Position.X < -BoundingBox.Width/2)
 			{
 				// By setting the Active flag to false, the game will remove this objet from the
 				// active game list
