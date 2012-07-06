@@ -10,8 +10,6 @@ namespace Shooter.Popups
 		Rectangle drawRectangle;
 		Texture2D image;
 
-		SpriteBatch spriteBatch;
-
 		SpriteFont font;
 
 		ScreenBase owner;
@@ -31,7 +29,6 @@ namespace Shooter.Popups
 
 		public override void LoadContent()
 		{
-			spriteBatch = new SpriteBatch(Globals.Graphics.GraphicsDevice);
 			image = Content.Load<Texture2D>("alienmetal");
 
 			font = Game.Content.Load<SpriteFont>("gameFont");
@@ -52,8 +49,7 @@ namespace Shooter.Popups
 
 		public override void Draw(GameTime gameTime)
 		{
-			spriteBatch.Begin();
-			spriteBatch.Draw(image, drawRectangle, Color.White);
+			Globals.SpriteBatch.Draw(image, drawRectangle, Color.White);
 
 			var str = "Game Over";
 
@@ -63,9 +59,7 @@ namespace Shooter.Popups
 				(drawRectangle.Width - size.X) / 2 + drawRectangle.X,
 				(drawRectangle.Height - size.Y) / 2 + drawRectangle.Y);
 
-			spriteBatch.DrawString(font, "Game Over", position, Color.Black);
-
-			spriteBatch.End();
+			Globals.SpriteBatch.DrawString(font, "Game Over", position, Color.Black);
 
 			base.Draw(gameTime);
 		}

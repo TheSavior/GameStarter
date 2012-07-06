@@ -5,7 +5,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Shooter.Actors
 {
-	class Player : ActorBase
+	public class Player : ActorBase
 	{
 		// Velocity of the Player
 		public Vector2 Velocity;
@@ -19,6 +19,11 @@ namespace Shooter.Actors
 		{
 			Texture = Game.Content.Load<Texture2D>("Fish");
 			base.LoadContent();
+		}
+
+		public void SetScale(float scale)
+		{
+			Scale = scale;
 		}
 
 		public void Bigger()
@@ -47,7 +52,7 @@ namespace Shooter.Actors
 
 			//Debug.WriteLine("Size Before: {0}", length);
 			var percent = enemySize / length;
-			var add = MathHelper.Lerp(0, 1, percent);
+			var add = MathHelper.Lerp(0, Scale / 10, percent);
 
 			Scale += add;
 

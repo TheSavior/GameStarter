@@ -1,21 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Shooter.Actors;
+using Shooter.Components;
 using Shooter.Extensions;
 using Shooter.Popups;
 
 namespace Shooter.Screens
 {
-	class ActionScreen : ScreenBase
+	public class ActionScreen : ScreenBase
 	{
 		Texture2D image;
 		Rectangle imageRectangle;
 
 		// Represents the player 
-		Player player;
+		public Player player;
 
 		// Enemies
 		List<Enemy> enemies;
@@ -29,7 +31,9 @@ namespace Shooter.Screens
 
 		GameOverPopup popup;
 
-		Camera2D camera;
+		HudComponent hud;
+
+		public Camera2D camera;
 		float initialZoom;
 		float zoomIncrement;
 
@@ -42,7 +46,7 @@ namespace Shooter.Screens
 				Globals.Graphics.GraphicsDevice.Viewport.Height);
 
 			zoomIncrement = .4f;
-			initialZoom = 1f;
+			initialZoom = 5f;
 
 			camera = new Camera2D(
 				Globals.Graphics.GraphicsDevice.Viewport,
@@ -68,6 +72,9 @@ namespace Shooter.Screens
 			popup = new GameOverPopup(this);
 			Components.Add(popup);
 
+			hud = new HudComponent(this);
+			Components.Add(hud);
+
 			base.Initialize();
 		}
 
@@ -81,6 +88,8 @@ namespace Shooter.Screens
 
 		public override void Reset()
 		{
+			base.Reset();
+
 			// Initialize the enemies list
 			enemies = new List<Enemy>();
 			popup.Visible = false;
@@ -88,10 +97,10 @@ namespace Shooter.Screens
 			Vector2 playerPosition = new Vector2(0 + player.BoundingBox.Width / 2, Globals.Graphics.GraphicsDevice.Viewport.Height / 2);
 			player.SetPosition(playerPosition);
 
+			player.SetScale(.2f);
+
 			camera.SetZoom(initialZoom);
 			camera.SetPosition(playerPosition);
-
-			base.Reset();
 		}
 
 		public override void Update(GameTime gameTime)
@@ -105,6 +114,11 @@ namespace Shooter.Screens
 			camera.MoveTo(player.Position);
 
 			camera.Update();
+
+			if (!player.Active)
+			{
+				player.Enabled = false;
+			}
 
 			if (player.Active)
 			{
@@ -141,6 +155,8 @@ namespace Shooter.Screens
 			Globals.SpriteBatch.End();
 
 			Globals.SpriteBatch.Begin();
+			hud.Draw(gameTime);
+
 			if (!player.Active)
 			{
 				popup.Draw(gameTime);
@@ -151,8 +167,10 @@ namespace Shooter.Screens
 		private void AddEnemy()
 		{
 			// Create an enemy
-			var size = (float)(random.NextDouble() + .5);
-			//Debug.WriteLine("Enemy size {0}", size);
+			//var size = (float)(random.NextDouble() - .1 + player.Scale);
+			var size = (float)(random.NextDouble() - .5 + player.Scale);
+			size = Math.Max(.2f, size);
+			Debug.WriteLine("Enemy size {0}", size);
 			Enemy enemy = new Enemy();
 
 			// Initialize the enemy
@@ -164,6 +182,7 @@ namespace Shooter.Screens
 			Vector2 position = new Vector2(viewport.Width + enemy.BoundingBox.Width, random.Next(100, viewport.Height - 100));
 
 			enemy.SetPosition(position);
+
 			enemy.SetSize(size);
 
 			// Add the enemy to the active enemies list
@@ -284,12 +303,13 @@ namespace Shooter.Screens
 								{
 									if (enemyColors[(int)enemyTexturePixelPos.X, (int)enemyTexturePixelPos.Y].A > 0)
 									{
-
 										// Collision, either game over or success eating
 										if (enemies[i].BoundingVector.Length() <= player.BoundingVector.Length())
 										{
 											player.Eat(enemies[i].BoundingVector.Length());
 											enemies[i].Active = false;
+
+											camera.ZoomTo(1 / player.Scale);
 										}
 										else
 										{

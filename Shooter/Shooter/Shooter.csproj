@@ -110,7 +110,9 @@
   <ItemGroup>
     <Compile Include="Actors\ActorBase.cs" />
     <Compile Include="Camera2D.cs" />
+    <Compile Include="Components\HudComponent.cs" />
     <Compile Include="DrawableComponent.cs" />
+    <Compile Include="Extensions\RectangleExtensions.cs" />
     <Compile Include="Extensions\Texture2DExtensions.cs" />
     <Compile Include="Globals.cs" />
     <Compile Include="KeyboardManager.cs" />

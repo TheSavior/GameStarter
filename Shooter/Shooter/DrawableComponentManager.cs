@@ -43,13 +43,6 @@ namespace Shooter
 			}
 
 			Reset();
-			foreach (GameComponent component in Components)
-			{
-				if (component is DrawableComponent)
-				{
-					((DrawableComponent)component).Reset();
-				}
-			}
 		}
 
 		public override void Update(GameTime gameTime)

@@ -10,6 +10,18 @@ namespace Shooter.Actors
 
 		private Random rand;
 
+		public Vector2 TargetDirection
+		{
+			get;
+			set;
+		}
+
+		public Vector2 Direction
+		{
+			get;
+			set;
+		}
+
 		public Enemy()
 		{
 			rand = new Random();
@@ -39,6 +51,8 @@ namespace Shooter.Actors
 		{
 			// The enemy always moves to the left so decrement it's x position
 			Position.X -= speed;
+
+			//Position = Direction * speed;
 
 			// If the enemy is past the screen then deactivate it
 			if (Position.X < -BoundingBox.Width / 2)

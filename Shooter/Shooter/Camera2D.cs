@@ -4,7 +4,7 @@ namespace Shooter
 {
 	public class Camera2D
 	{
-		private const float zoomUpperLimit = 3f;
+		private const float zoomUpperLimit = 5f;
 		private const float zoomLowerLimit = 1f;
 
 		private float _zoom;
@@ -65,6 +65,11 @@ namespace Shooter
 			goalZoom = BoundZoom(goalZoom);
 		}
 
+		public void ZoomTo(float zoom)
+		{
+			goalZoom = BoundZoom(zoom);
+		}
+
 		public void SetZoom(float zoom)
 		{
 			goalZoom = Zoom = BoundZoom(zoom);
@@ -86,7 +91,7 @@ namespace Shooter
 			Zoom += zoomDiff * .05f;
 
 			var posDiff = goalPosition - Position;
-			Position += posDiff * .05f;
+			Position += posDiff * Zoom * .05f;
 		}
 
 		public Matrix GetTransformation()
