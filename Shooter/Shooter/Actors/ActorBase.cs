@@ -44,15 +44,14 @@ namespace Shooter.Actors
 			}
 		}
 
-		public ActorBase()
+		public override void Reset()
 		{
-			this.Scale = 1f;
-		}
-
-		public override void Initialize()
-		{
+			Active = true;
+			Enabled = true;
+			Scale = 1f;
 			DrawDirection = Direction.Right;
-			base.Initialize();
+
+			base.Reset();
 		}
 
 		public override void Draw(GameTime gameTime)

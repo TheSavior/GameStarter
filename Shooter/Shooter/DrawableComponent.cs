@@ -19,5 +19,10 @@ namespace Shooter
 		{
 			base.UnloadContent();
 		}
+
+		public virtual void Reset()
+		{
+
+		}
 	}
 }

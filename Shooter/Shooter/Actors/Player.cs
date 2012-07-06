@@ -15,11 +15,6 @@ namespace Shooter.Actors
 
 		private float max_speed = 3f;
 
-		public Player()
-		{
-			this.Active = true;
-		}
-
 		public override void LoadContent()
 		{
 			Texture = Game.Content.Load<Texture2D>("Fish");

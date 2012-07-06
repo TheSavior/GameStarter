@@ -14,19 +14,19 @@ namespace Shooter.Popups
 
 		SpriteFont font;
 
-		public GameOverPopup()
+		ScreenBase owner;
+
+		public GameOverPopup(ScreenBase owner)
 		{
+			this.owner = owner;
+
 			var padding = 100;
+
 			drawRectangle = new Rectangle(
 				padding,
 				padding,
 				Game.Window.ClientBounds.Width - padding * 2,
 				Game.Window.ClientBounds.Height - padding * 2);
-		}
-
-		public override void Initialize()
-		{
-			base.Initialize();
 		}
 
 		public override void LoadContent()
@@ -43,7 +43,8 @@ namespace Shooter.Popups
 		{
 			if (Globals.KeyManager.IsKeyPress(Keys.Space))
 			{
-				Globals.ScreenManager.Navigate(Screen.Start);
+				// Reset
+				owner.Reset();
 			}
 
 			base.Update(gameTime);

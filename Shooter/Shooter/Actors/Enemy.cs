@@ -10,14 +10,9 @@ namespace Shooter.Actors
 
 		private Random rand;
 
-		public override void Initialize()
+		public Enemy()
 		{
 			rand = new Random();
-			speed = rand.Next(1, 5) / 2f;
-
-			Active = true;
-
-			base.Initialize();
 		}
 
 		public override void LoadContent()
@@ -25,6 +20,14 @@ namespace Shooter.Actors
 			Texture = Game.Content.Load<Texture2D>("enemy");
 
 			base.LoadContent();
+		}
+
+		public override void Reset()
+		{
+			speed = rand.Next(1, 5) / 2f;
+
+			Active = true;
+			base.Reset();
 		}
 
 		public void SetSize(float size)
@@ -38,7 +41,7 @@ namespace Shooter.Actors
 			Position.X -= speed;
 
 			// If the enemy is past the screen then deactivate it
-			if (Position.X < -BoundingBox.Width/2)
+			if (Position.X < -BoundingBox.Width / 2)
 			{
 				// By setting the Active flag to false, the game will remove this objet from the
 				// active game list

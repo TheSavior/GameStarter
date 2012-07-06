@@ -31,7 +31,8 @@ namespace Shooter.Screens
 		GameOverPopup popup;
 
 		Camera2D camera;
-		float zoomIncrement = .1f;
+		float initialZoom;
+		float zoomIncrement;
 
 		int previousScroll;
 
@@ -43,6 +44,15 @@ namespace Shooter.Screens
 				Globals.Graphics.GraphicsDevice.Viewport.Width,
 				Globals.Graphics.GraphicsDevice.Viewport.Height);
 
+			zoomIncrement = .1f;
+			initialZoom = 1f;
+
+			camera = new Camera2D(
+				Globals.Graphics.GraphicsDevice.Viewport,
+				Globals.Graphics.GraphicsDevice.Viewport.Width,
+				Globals.Graphics.GraphicsDevice.Viewport.Height,
+				initialZoom);
+
 			// Set the time keepers to zero
 			previousSpawnTime = TimeSpan.Zero;
 
@@ -51,30 +61,19 @@ namespace Shooter.Screens
 
 			// Initialize our random number generator
 			random = new Random();
-
-			// Initialize the enemies list
-			enemies = new List<Enemy>();
 		}
 
 		public override void Initialize()
 		{
-			camera = new Camera2D(
-				Globals.Graphics.GraphicsDevice.Viewport,
-				Globals.Graphics.GraphicsDevice.Viewport.Width,
-				Globals.Graphics.GraphicsDevice.Viewport.Height,
-				2f);
-
 			// Initialize the player class
 			player = new Player();
 			Components.Add(player);
 
-			popup = new GameOverPopup();
-			popup.Visible = false;
+			popup = new GameOverPopup(this);
 			Components.Add(popup);
 
 			base.Initialize();
 		}
-
 
 		public override void LoadContent()
 		{
@@ -82,9 +81,20 @@ namespace Shooter.Screens
 
 			// We need to LoadContent on the player before we set its position
 			base.LoadContent();
+		}
+
+		public override void Reset()
+		{
+			// Initialize the enemies list
+			enemies = new List<Enemy>();
+			popup.Visible = false;
 
 			Vector2 playerPosition = new Vector2(0 + player.BoundingBox.Width / 2, Globals.Graphics.GraphicsDevice.Viewport.Height / 2);
 			player.SetPosition(playerPosition);
+
+			camera.Zoom = initialZoom;
+
+			base.Reset();
 		}
 
 		public override void Update(GameTime gameTime)

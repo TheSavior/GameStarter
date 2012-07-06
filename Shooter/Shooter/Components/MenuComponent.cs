@@ -64,11 +64,6 @@ namespace Shooter.Components
 				(Game.Window.ClientBounds.Height - height) / 2);
 		}
 
-		public override void Initialize()
-		{
-			base.Initialize();
-		}
-
 		public override void Update(GameTime gameTime)
 		{
 
