@@ -61,7 +61,9 @@ namespace Shooter.Actors
 			{
 				effect = SpriteEffects.FlipHorizontally;
 			}
-			Globals.SpriteBatch.Draw(Texture, BoundingBox, null, Color.White, 0f, Vector2.Zero, effect, 0);
+
+			var origin = new Vector2(Texture.Width / 2, Texture.Height / 2);
+			Globals.SpriteBatch.Draw(Texture, Position, null, Color.White, 0, origin, Scale, effect, 0);
 			base.Draw(gameTime);
 		}
 

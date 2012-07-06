@@ -22,7 +22,8 @@ namespace Shooter
 			screens.Add(startScreen);
 			screens.Add(actionScreen);
 
-			activeScreen = startScreen;
+			//activeScreen = startScreen;
+			activeScreen = actionScreen;
 		}
 
 		public void Initialize()

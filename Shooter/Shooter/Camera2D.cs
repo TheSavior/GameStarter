@@ -10,87 +10,128 @@ namespace Shooter
 		private float _zoom;
 		private Matrix _transform;
 		private Vector2 _pos;
-		private float _rotation;
 		private int _viewportWidth;
 		private int _viewportHeight;
 		private int _worldWidth;
 		private int _worldHeight;
 
-		public Camera2D(Viewport viewport, int worldWidth,
-			int worldHeight, float initialZoom)
-		{
-			_zoom = initialZoom;
-			_rotation = 0.0f;
-			_pos = Vector2.Zero;
-			_viewportWidth = viewport.Width;
-			_viewportHeight = viewport.Height;
-			_worldWidth = worldWidth;
-			_worldHeight = worldHeight;
-		}
+		private Vector2 goalPosition;
+		private float goalZoom;
 
 		#region Properties
 
 		public float Zoom
 		{
 			get { return _zoom; }
-			set
+			private set
 			{
-				_zoom = value;
-				if (_zoom < zoomLowerLimit)
-					_zoom = zoomLowerLimit;
-				if (_zoom > zoomUpperLimit)
-					_zoom = zoomUpperLimit;
+				_zoom = BoundZoom(value);
 			}
 		}
 
 		public float Rotation
 		{
-			get { return _rotation; }
-			set { _rotation = value; }
+			get;
+			private set;
 		}
 
-		public void Move(Vector2 amount)
-		{
-			_pos += amount;
-		}
-
-		public Vector2 Pos
+		public Vector2 Position
 		{
 			get { return _pos; }
-			set
+			private set
 			{
-				float leftBarrier = (float)_viewportWidth *
-						.5f / _zoom;
-				float rightBarrier = _worldWidth -
-						(float)_viewportWidth * .5f / _zoom;
-				float topBarrier = _worldHeight -
-						(float)_viewportHeight * .5f / _zoom;
-				float bottomBarrier = (float)_viewportHeight *
-						.5f / _zoom;
-				_pos = value;
-				if (_pos.X < leftBarrier)
-					_pos.X = leftBarrier;
-				if (_pos.X > rightBarrier)
-					_pos.X = rightBarrier;
-				if (_pos.Y > topBarrier)
-					_pos.Y = topBarrier;
-				if (_pos.Y < bottomBarrier)
-					_pos.Y = bottomBarrier;
+				_pos = BoundPosition(value);
 			}
 		}
 
 		#endregion
 
+		public Camera2D(Viewport viewport, int worldWidth,
+			int worldHeight)
+		{
+			Rotation = 0.0f;
+			SetZoom(2f);
+			SetPosition(Vector2.Zero);
+
+			_viewportWidth = viewport.Width;
+			_viewportHeight = viewport.Height;
+			_worldWidth = worldWidth;
+			_worldHeight = worldHeight;
+		}
+
+		public void ChangeZoom(float change)
+		{
+			goalZoom += change;
+			goalZoom = BoundZoom(goalZoom);
+		}
+
+		public void SetZoom(float zoom)
+		{
+			goalZoom = Zoom = BoundZoom(zoom);
+		}
+
+		public void MoveTo(Vector2 position)
+		{
+			goalPosition = BoundPosition(position);
+		}
+
+		public void SetPosition(Vector2 position)
+		{
+			goalPosition = Position = BoundPosition(position);
+		}
+
+		public void Update()
+		{
+			var zoomDiff = goalZoom - Zoom;
+			Zoom += zoomDiff * .05f;
+
+			var posDiff = goalPosition - Position;
+			Position += posDiff * .05f;
+		}
+
 		public Matrix GetTransformation()
 		{
 			_transform =
-				Matrix.CreateTranslation(new Vector3(-_pos.X, -_pos.Y, 0)) *
+				Matrix.CreateTranslation(new Vector3(-Position.X, -Position.Y, 0)) *
 				Matrix.CreateRotationZ(Rotation) *
 				Matrix.CreateScale(new Vector3(Zoom, Zoom, 1)) *
 				Matrix.CreateTranslation(new Vector3(_viewportWidth * 0.5f,
 					_viewportHeight * 0.5f, 0));
 
 			return _transform;
+		}
+
+		private Vector2 BoundPosition(Vector2 position)
+		{
+			float leftBarrier = (float)_viewportWidth *
+						.5f / _zoom;
+			float rightBarrier = _worldWidth -
+					(float)_viewportWidth * .5f / _zoom;
+			float topBarrier = _worldHeight -
+					(float)_viewportHeight * .5f / _zoom;
+			float bottomBarrier = (float)_viewportHeight *
+					.5f / _zoom;
+
+			if (position.X < leftBarrier)
+				position.X = leftBarrier;
+			if (position.X > rightBarrier)
+				position.X = rightBarrier;
+			if (position.Y > topBarrier)
+				position.Y = topBarrier;
+			if (position.Y < bottomBarrier)
+				position.Y = bottomBarrier;
+
+			return position;
+		}
+
+		private float BoundZoom(float zoom)
+		{
+			if (zoom < zoomLowerLimit)
+				zoom = zoomLowerLimit;
+			if (zoom > zoomUpperLimit)
+				zoom = zoomUpperLimit;
+
+			return zoom;
 		}
 	}
 }

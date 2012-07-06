@@ -29,6 +29,7 @@ namespace Shooter.Actors
 		public void Smaller()
 		{
 			Scale -= .05f;
+			Debug.WriteLine(Scale);
 		}
 
 		public override void Update(GameTime gameTime)
@@ -44,14 +45,14 @@ namespace Shooter.Actors
 			// First figure out what percent they are of us
 			var length = BoundingVector.Length();
 
-			Debug.WriteLine("Size Before: {0}", length);
+			//Debug.WriteLine("Size Before: {0}", length);
 			var percent = enemySize / length;
 			var add = MathHelper.Lerp(0, 1, percent);
 
 			Scale += add;
 
-			Debug.WriteLine("Size After: {0}", BoundingVector.Length());
-			Debug.WriteLine("");
+			//Debug.WriteLine("Size After: {0}", BoundingVector.Length());
+			//Debug.WriteLine("");
 
 		}
 

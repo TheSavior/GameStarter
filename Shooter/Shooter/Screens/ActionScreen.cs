@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -34,8 +33,6 @@ namespace Shooter.Screens
 		float initialZoom;
 		float zoomIncrement;
 
-		int previousScroll;
-
 		public ActionScreen()
 		{
 			imageRectangle = new Rectangle(
@@ -44,14 +41,13 @@ namespace Shooter.Screens
 				Globals.Graphics.GraphicsDevice.Viewport.Width,
 				Globals.Graphics.GraphicsDevice.Viewport.Height);
 
-			zoomIncrement = .1f;
+			zoomIncrement = .4f;
 			initialZoom = 1f;
 
 			camera = new Camera2D(
 				Globals.Graphics.GraphicsDevice.Viewport,
 				Globals.Graphics.GraphicsDevice.Viewport.Width,
-				Globals.Graphics.GraphicsDevice.Viewport.Height,
-				initialZoom);
+				Globals.Graphics.GraphicsDevice.Viewport.Height);
 
 			// Set the time keepers to zero
 			previousSpawnTime = TimeSpan.Zero;
@@ -92,50 +88,23 @@ namespace Shooter.Screens
 			Vector2 playerPosition = new Vector2(0 + player.BoundingBox.Width / 2, Globals.Graphics.GraphicsDevice.Viewport.Height / 2);
 			player.SetPosition(playerPosition);
 
-			camera.Zoom = initialZoom;
+			camera.SetZoom(initialZoom);
+			camera.SetPosition(playerPosition);
 
 			base.Reset();
 		}
 
 		public override void Update(GameTime gameTime)
 		{
-			if (!player.Active || Globals.KeyManager.IsKeyPress(Keys.C))
-			{
-				popup.Visible = true;
-				player.Enabled = false;
-			}
-			else if (Globals.KeyManager.IsKeyPress(Keys.V))
-			{
-				popup.Visible = false;
-				player.Enabled = true;
-			}
-
-			MouseState mouseStateCurrent = Mouse.GetState();
 			// Adjust zoom if the mouse wheel has moved
-			if (mouseStateCurrent.ScrollWheelValue > previousScroll)
-				camera.Zoom += zoomIncrement;
-			else if (mouseStateCurrent.ScrollWheelValue < previousScroll)
-				camera.Zoom -= zoomIncrement;
+			if (Globals.KeyManager.IsKeyPress(Keys.W))
+				camera.ChangeZoom(-zoomIncrement);
+			else if (Globals.KeyManager.IsKeyPress(Keys.Q))
+				camera.ChangeZoom(zoomIncrement);
 
-			previousScroll = mouseStateCurrent.ScrollWheelValue;
+			camera.MoveTo(player.Position);
 
-			// Move the camera when the arrow keys are pressed
-			Vector2 movement = Vector2.Zero;
-			Viewport vp = Globals.Graphics.GraphicsDevice.Viewport;
-
-			if (Globals.KeyManager.IsKeyDown(Keys.NumPad4))
-				movement.X--;
-			if (Globals.KeyManager.IsKeyDown(Keys.NumPad6))
-				movement.X++;
-			if (Globals.KeyManager.IsKeyDown(Keys.NumPad8))
-				movement.Y--;
-			if (Globals.KeyManager.IsKeyDown(Keys.NumPad2))
-				movement.Y++;
-
-			//camera.Pos += movement * 20;
-			//camera.Pos = player.Position;
-			var diff = player.Position - camera.Pos;
-			camera.Pos += diff * .05f;
+			camera.Update();
 
 			if (player.Active)
 			{
@@ -183,7 +152,7 @@ namespace Shooter.Screens
 		{
 			// Create an enemy
 			var size = (float)(random.NextDouble() + .5);
-			Debug.WriteLine("Enemy size {0}", size);
+			//Debug.WriteLine("Enemy size {0}", size);
 			Enemy enemy = new Enemy();
 
 			// Initialize the enemy
