@@ -20,6 +20,8 @@ namespace Shooter
 			Globals.ScreenManager = new ScreenManager();
 			Globals.ScreenManager.Initialize();
 			Globals.SpriteBatch = new SpriteBatch(Globals.Graphics.GraphicsDevice);
+			Globals.KeyManager = new KeyboardManager();
+			Components.Add(Globals.KeyManager);
 
 			base.Initialize();
 		}

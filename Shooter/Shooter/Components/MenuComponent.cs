@@ -14,9 +14,6 @@ namespace Shooter.Components
 		Color normal = Color.White;
 		Color hilite = Color.Yellow;
 
-		KeyboardState keyboardState;
-		KeyboardState oldKeyboardState;
-
 		SpriteBatch spriteBatch;
 		SpriteFont spriteFont;
 
@@ -72,21 +69,14 @@ namespace Shooter.Components
 			base.Initialize();
 		}
 
-		private bool CheckKey(Keys theKey)
-		{
-			return keyboardState.IsKeyUp(theKey) &&
-				oldKeyboardState.IsKeyDown(theKey);
-		}
-
 		public override void Update(GameTime gameTime)
 		{
-			keyboardState = Keyboard.GetState();
 
-			if (CheckKey(Keys.Down))
+			if (Globals.KeyManager.IsKeyPress(Keys.Down))
 			{
 				_selectedIndex++;
 			}
-			else if (CheckKey(Keys.Up))
+			else if (Globals.KeyManager.IsKeyPress(Keys.Up))
 			{
 				_selectedIndex--;
 			}
@@ -99,8 +89,6 @@ namespace Shooter.Components
 			}
 
 			base.Update(gameTime);
-
-			oldKeyboardState = keyboardState;
 		}
 
 		public override void Draw(GameTime gameTime)

@@ -11,9 +11,6 @@ namespace Shooter.Screens
 		Texture2D image;
 		Rectangle imageRectangle;
 
-		KeyboardState oldKeyboardState;
-		KeyboardState keyboardState;
-
 		SpriteBatch spriteBatch;
 
 		public StartScreen()
@@ -41,10 +38,7 @@ namespace Shooter.Screens
 
 		public override void Update(GameTime gameTime)
 		{
-			// TODO: Add your update logic here
-			keyboardState = Keyboard.GetState();
-
-			if (CheckKey(Keys.Enter))
+			if (Globals.KeyManager.IsKeyPress(Keys.Enter))
 			{
 				if (menuComponent.SelectedIndex == 0)
 				{
@@ -57,8 +51,6 @@ namespace Shooter.Screens
 			}
 
 			base.Update(gameTime);
-
-			oldKeyboardState = keyboardState;
 		}
 
 		public override void Draw(GameTime gameTime)
@@ -68,12 +60,5 @@ namespace Shooter.Screens
 			spriteBatch.End();
 			base.Draw(gameTime);
 		}
-
-		private bool CheckKey(Keys theKey)
-		{
-			return keyboardState.IsKeyUp(theKey) &&
-				oldKeyboardState.IsKeyDown(theKey);
-		}
 	}
-
 }

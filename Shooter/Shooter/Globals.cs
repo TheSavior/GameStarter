@@ -14,5 +14,7 @@ namespace Shooter
 		public static SpriteBatch SpriteBatch;
 
 		public static GameTime GameTime;
+
+		public static KeyboardManager KeyManager;
 	}
 }

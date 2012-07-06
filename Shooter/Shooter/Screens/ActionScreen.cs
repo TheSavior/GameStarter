@@ -28,10 +28,6 @@ namespace Shooter.Screens
 		// A random number generator
 		Random random;
 
-		// Keyboard states used to determine key presses
-		KeyboardState previousKeyboardState;
-		KeyboardState currentKeyboardState;
-
 		GameOverPopup popup;
 
 		Camera2D camera;
@@ -93,20 +89,12 @@ namespace Shooter.Screens
 
 		public override void Update(GameTime gameTime)
 		{
-			// Read the current state of the keyboard and gamepad and store it
-			currentKeyboardState = Keyboard.GetState();
-
-			if (previousKeyboardState == null)
-			{
-				previousKeyboardState = currentKeyboardState;
-			}
-
-			if (!player.Active || currentKeyboardState.IsKeyDown(Keys.C) && previousKeyboardState.IsKeyUp(Keys.C))
+			if (!player.Active || Globals.KeyManager.IsKeyPress(Keys.C))
 			{
 				popup.Visible = true;
 				player.Enabled = false;
 			}
-			else if (currentKeyboardState.IsKeyDown(Keys.V) && previousKeyboardState.IsKeyUp(Keys.V))
+			else if (Globals.KeyManager.IsKeyPress(Keys.V))
 			{
 				popup.Visible = false;
 				player.Enabled = true;
@@ -125,17 +113,19 @@ namespace Shooter.Screens
 			Vector2 movement = Vector2.Zero;
 			Viewport vp = Globals.Graphics.GraphicsDevice.Viewport;
 
-			if (currentKeyboardState.IsKeyDown(Keys.NumPad4))
+			if (Globals.KeyManager.IsKeyDown(Keys.NumPad4))
 				movement.X--;
-			if (currentKeyboardState.IsKeyDown(Keys.NumPad6))
+			if (Globals.KeyManager.IsKeyDown(Keys.NumPad6))
 				movement.X++;
-			if (currentKeyboardState.IsKeyDown(Keys.NumPad8))
+			if (Globals.KeyManager.IsKeyDown(Keys.NumPad8))
 				movement.Y--;
-			if (currentKeyboardState.IsKeyDown(Keys.NumPad2))
+			if (Globals.KeyManager.IsKeyDown(Keys.NumPad2))
 				movement.Y++;
 
 			//camera.Pos += movement * 20;
-			camera.Pos = player.Position;
+			//camera.Pos = player.Position;
+			var diff = player.Position - camera.Pos;
+			camera.Pos += diff * .05f;
 
 			if (player.Active)
 			{
@@ -150,8 +140,6 @@ namespace Shooter.Screens
 			}
 
 			base.Update(gameTime);
-
-			previousKeyboardState = currentKeyboardState;
 		}
 
 		public override void Draw(GameTime gameTime)
@@ -206,21 +194,21 @@ namespace Shooter.Screens
 		private void UpdatePlayer(GameTime gameTime)
 		{
 			// Use the Keyboard
-			bool left = currentKeyboardState.IsKeyDown(Keys.Left);
-			bool right = currentKeyboardState.IsKeyDown(Keys.Right);
-			bool up = currentKeyboardState.IsKeyDown(Keys.Up);
-			bool down = currentKeyboardState.IsKeyDown(Keys.Down);
+			bool left = Globals.KeyManager.IsKeyDown(Keys.Left);
+			bool right = Globals.KeyManager.IsKeyDown(Keys.Right);
+			bool up = Globals.KeyManager.IsKeyDown(Keys.Up);
+			bool down = Globals.KeyManager.IsKeyDown(Keys.Down);
 
 			if (left) player.AddDirection(Direction.Left);
 			if (right) player.AddDirection(Direction.Right);
 			if (up) player.AddDirection(Direction.Up);
 			if (down) player.AddDirection(Direction.Down);
 
-			if (currentKeyboardState.IsKeyDown(Keys.A))
+			if (Globals.KeyManager.IsKeyDown(Keys.A))
 			{
 				player.Bigger();
 			}
-			else if (currentKeyboardState.IsKeyDown(Keys.S))
+			else if (Globals.KeyManager.IsKeyDown(Keys.S))
 			{
 				player.Smaller();
 			}

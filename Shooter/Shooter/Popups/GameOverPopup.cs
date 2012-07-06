@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using Shooter.Screens;
 
 namespace Shooter.Popups
@@ -36,6 +37,16 @@ namespace Shooter.Popups
 			font = Game.Content.Load<SpriteFont>("gameFont");
 
 			base.LoadContent();
+		}
+
+		public override void Update(GameTime gameTime)
+		{
+			if (Globals.KeyManager.IsKeyPress(Keys.Space))
+			{
+				Globals.ScreenManager.Navigate(Screen.Start);
+			}
+
+			base.Update(gameTime);
 		}
 
 		public override void Draw(GameTime gameTime)
