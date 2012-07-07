@@ -95,7 +95,7 @@ namespace Shooter.Screens
 			popup.Visible = false;
 
 			Vector2 playerPosition = new Vector2(0 + player.BoundingBox.Width / 2, Globals.Graphics.GraphicsDevice.Viewport.Height / 2);
-			player.SetPosition(playerPosition);
+			player.Position = playerPosition;
 
 			player.SetScale(.2f);
 
@@ -179,11 +179,18 @@ namespace Shooter.Screens
 
 			// Randomly generate the position of the enemy
 			var viewport = Globals.Graphics.GraphicsDevice.Viewport;
-			Vector2 position = new Vector2(viewport.Width + enemy.BoundingBox.Width, random.Next(100, viewport.Height - 100));
+			var locX = random.Next(0, viewport.Width - enemy.BoundingBox.Width);
+			var locY = random.Next(0, viewport.Height - enemy.BoundingBox.Height);
+			Vector2 position = new Vector2(locX, locY);
 
-			enemy.SetPosition(position);
+			enemy.Position = position;
 
 			enemy.SetSize(size);
+
+			Direction[] values = (Direction[])Enum.GetValues(typeof(Direction));
+			var direction = values[random.Next(0, values.Length)];
+
+			enemy.AddDirection(direction);
 
 			// Add the enemy to the active enemies list
 			enemies.Add(enemy);
@@ -221,6 +228,8 @@ namespace Shooter.Screens
 			}
 		}
 
+
+		private int counter;
 		private void UpdateEnemies(GameTime gameTime)
 		{
 			// Spawn a new enemy enemy every 1.5 seconds
@@ -235,12 +244,26 @@ namespace Shooter.Screens
 			// Update the Enemies
 			for (int i = enemies.Count - 1; i >= 0; i--)
 			{
+				if (counter == 0)
+				{
+					Direction[] values = (Direction[])Enum.GetValues(typeof(Direction));
+					var direction = values[random.Next(0, values.Length)];
+
+					enemies[i].AddDirection(direction);
+				}
+
 				enemies[i].Update(gameTime);
 
 				if (enemies[i].Active == false)
 				{
 					enemies.RemoveAt(i);
 				}
+			}
+
+			counter++;
+			if (counter > 100)
+			{
+				counter = 0;
 			}
 		}
 
@@ -294,7 +317,7 @@ namespace Shooter.Screens
 
 								// Lets handle flipping
 								int playerTextureWithFlip = (int)playerTexturePixelPos.X;
-								if (player.DrawDirection == Direction.Left)
+								if (player.Velocity.X < 0)
 								{
 									playerTextureWithFlip = player.Texture.Width - playerTextureWithFlip - 1;
 								}

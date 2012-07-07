@@ -7,9 +7,6 @@ namespace Shooter.Actors
 {
 	public class Player : ActorBase
 	{
-		// Velocity of the Player
-		public Vector2 Velocity;
-
 		private float increase_speed = .10f;
 		private float decrease_speed = .05f;
 
@@ -70,6 +67,7 @@ namespace Shooter.Actors
 			{
 				Velocity.X = 0;
 			}
+
 			Position.X = MathHelper.Clamp(
 				Position.X,
 				0 + BoundingBox.Width / 2,
@@ -77,12 +75,12 @@ namespace Shooter.Actors
 
 			Position.Y += Velocity.Y;
 
-
 			if (Position.Y < 0 + BoundingBox.Height / 2 ||
 				Position.Y > Game.GraphicsDevice.Viewport.Height - BoundingBox.Height / 2)
 			{
 				Velocity.Y = 0;
 			}
+
 			Position.Y = MathHelper.Clamp(
 				Position.Y,
 				0 + BoundingBox.Height / 2,
@@ -94,12 +92,12 @@ namespace Shooter.Actors
 			switch (direction)
 			{
 				case Direction.Right:
-					DrawDirection = Direction.Right;
 					Velocity.X += increase_speed;
+					DrawDirection = Direction.Right;
 					break;
 				case Direction.Left:
-					DrawDirection = Direction.Left;
 					Velocity.X -= increase_speed;
+					DrawDirection = Direction.Left;
 					break;
 				case Direction.Up:
 					Velocity.Y -= increase_speed;

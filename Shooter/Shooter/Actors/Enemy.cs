@@ -6,21 +6,15 @@ namespace Shooter.Actors
 {
 	public class Enemy : ActorBase
 	{
+		private float max_speed = 2f;
+		private float increase_speed = .10f;
+		private float decrease_speed = .05f;
+
 		private float speed;
 
 		private Random rand;
 
-		public Vector2 TargetDirection
-		{
-			get;
-			set;
-		}
-
-		public Vector2 Direction
-		{
-			get;
-			set;
-		}
+		public Vector2 TargetVelocity;
 
 		public Enemy()
 		{
@@ -30,7 +24,6 @@ namespace Shooter.Actors
 		public override void LoadContent()
 		{
 			Texture = Game.Content.Load<Texture2D>("enemy");
-
 			base.LoadContent();
 		}
 
@@ -42,6 +35,28 @@ namespace Shooter.Actors
 			base.Reset();
 		}
 
+		public void AddDirection(Direction direction)
+		{
+			switch (direction)
+			{
+				case Direction.Right:
+					TargetVelocity.X += increase_speed;
+					break;
+				case Direction.Left:
+					TargetVelocity.X -= increase_speed;
+					break;
+				case Direction.Up:
+					TargetVelocity.Y -= increase_speed;
+					break;
+				case Direction.Down:
+					TargetVelocity.Y += increase_speed;
+					break;
+			}
+
+			TargetVelocity.X = MathHelper.Clamp(TargetVelocity.X, max_speed * -1, max_speed);
+			TargetVelocity.Y = MathHelper.Clamp(TargetVelocity.Y, max_speed * -1, max_speed);
+		}
+
 		public void SetSize(float size)
 		{
 			Scale = size;
@@ -49,18 +64,42 @@ namespace Shooter.Actors
 
 		public override void Update(GameTime gameTime)
 		{
-			// The enemy always moves to the left so decrement it's x position
-			Position.X -= speed;
-
-			//Position = Direction * speed;
-
-			// If the enemy is past the screen then deactivate it
-			if (Position.X < -BoundingBox.Width / 2)
+			var diff = TargetVelocity - Velocity;
+			//var scaledDiff = diff * .05f;
+			if (diff != Vector2.Zero)
 			{
-				// By setting the Active flag to false, the game will remove this objet from the
-				// active game list
-				Active = false;
+				Velocity += diff * .025f;
 			}
+
+			if (Velocity.X > 0)
+			{
+				DrawDirection = Direction.Right;
+			}
+			else if (Velocity.X < 0)
+			{
+				DrawDirection = Direction.Left;
+			}
+
+			// The enemy always moves to the left so decrement it's x position
+			//Position.X -= speed;
+
+			Position += Velocity;
+
+			/*
+			var target = TargetDirection;
+
+			if (Position.X < 0 || Position.X > Game.GraphicsDevice.Viewport.Width)
+			{
+				target.X = -target.X;
+			}
+
+			if (Position.Y < 0 || Position.Y > Game.GraphicsDevice.Viewport.Width)
+			{
+				target.Y = -target.Y;
+			}
+
+			TargetDirection = target;
+			*/
 
 			base.Update(gameTime);
 		}

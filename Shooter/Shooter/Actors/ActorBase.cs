@@ -5,6 +5,9 @@ namespace Shooter.Actors
 {
 	public class ActorBase : DrawableComponentManager
 	{
+		// Velocity of the Actor
+		public Vector2 Velocity;
+
 		public bool Active;
 
 		// Animation representing the player
@@ -65,16 +68,6 @@ namespace Shooter.Actors
 			var origin = new Vector2(Texture.Width / 2, Texture.Height / 2);
 			Globals.SpriteBatch.Draw(Texture, Position, null, Color.White, 0, origin, Scale, effect, 0);
 			base.Draw(gameTime);
-		}
-
-		/// <summary>
-		/// Sets the center of the player
-		/// </summary>
-		/// <param name="position"></param>
-		public void SetPosition(Vector2 position)
-		{
-			// Set the starting position of the player around the middle of the screen and to the back
-			this.Position = position;
 		}
 	}
 }

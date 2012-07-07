@@ -48,7 +48,7 @@ namespace Shooter.Components
 			Globals.SpriteBatch.DrawString(font, str, position, Color.LightGreen, 0, align, 1.0f, SpriteEffects.None, 0.5f);
 
 
-			str = string.Format("Camera Zoom: {0}", screens.camera.Zoom.ToString("#.###"));
+			str = string.Format("Camera Zoom: {0}", screens.camera.Zoom.ToString("#.#"));
 			var newStringSize = font.MeasureString(str);
 			center = newStringSize / 2;
 			right = new Vector2(newStringSize.X, newStringSize.Y / 2);
