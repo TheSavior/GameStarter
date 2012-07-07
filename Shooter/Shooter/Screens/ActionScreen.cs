@@ -97,7 +97,7 @@ namespace Shooter.Screens
 			Vector2 playerPosition = new Vector2(0 + player.BoundingBox.Width / 2, Globals.Graphics.GraphicsDevice.Viewport.Height / 2);
 			player.Position = playerPosition;
 
-			player.SetScale(.2f);
+			player.Scale = .2f;
 
 			camera.SetZoom(initialZoom);
 			camera.SetPosition(playerPosition);
@@ -122,9 +122,6 @@ namespace Shooter.Screens
 
 			if (player.Active)
 			{
-				// Update the player
-				UpdatePlayer(gameTime);
-
 				// Update the enemies
 				UpdateEnemies(gameTime);
 
@@ -187,49 +184,10 @@ namespace Shooter.Screens
 
 			enemy.SetSize(size);
 
-			Direction[] values = (Direction[])Enum.GetValues(typeof(Direction));
-			var direction = values[random.Next(0, values.Length)];
-
-			enemy.AddDirection(direction);
-
 			// Add the enemy to the active enemies list
 			enemies.Add(enemy);
 		}
 
-		private void UpdatePlayer(GameTime gameTime)
-		{
-			// Use the Keyboard
-			bool left = Globals.KeyManager.IsKeyDown(Keys.Left);
-			bool right = Globals.KeyManager.IsKeyDown(Keys.Right);
-			bool up = Globals.KeyManager.IsKeyDown(Keys.Up);
-			bool down = Globals.KeyManager.IsKeyDown(Keys.Down);
-
-			if (left) player.AddDirection(Direction.Left);
-			if (right) player.AddDirection(Direction.Right);
-			if (up) player.AddDirection(Direction.Up);
-			if (down) player.AddDirection(Direction.Down);
-
-			if (Globals.KeyManager.IsKeyDown(Keys.A))
-			{
-				player.Bigger();
-			}
-			else if (Globals.KeyManager.IsKeyDown(Keys.S))
-			{
-				player.Smaller();
-			}
-
-			if (!right & !left)
-			{
-				player.slowDX();
-			}
-			if (!up & !down)
-			{
-				player.slowDY();
-			}
-		}
-
-
-		private int counter;
 		private void UpdateEnemies(GameTime gameTime)
 		{
 			// Spawn a new enemy enemy every 1.5 seconds
@@ -244,26 +202,12 @@ namespace Shooter.Screens
 			// Update the Enemies
 			for (int i = enemies.Count - 1; i >= 0; i--)
 			{
-				if (counter == 0)
-				{
-					Direction[] values = (Direction[])Enum.GetValues(typeof(Direction));
-					var direction = values[random.Next(0, values.Length)];
-
-					enemies[i].AddDirection(direction);
-				}
-
 				enemies[i].Update(gameTime);
 
 				if (enemies[i].Active == false)
 				{
 					enemies.RemoveAt(i);
 				}
-			}
-
-			counter++;
-			if (counter > 100)
-			{
-				counter = 0;
 			}
 		}
 
@@ -329,7 +273,7 @@ namespace Shooter.Screens
 										// Collision, either game over or success eating
 										if (enemies[i].BoundingVector.Length() <= player.BoundingVector.Length())
 										{
-											player.Eat(enemies[i].BoundingVector.Length());
+											player.Eat(enemies[i]);
 											enemies[i].Active = false;
 
 											camera.ZoomTo(1 / player.Scale);
