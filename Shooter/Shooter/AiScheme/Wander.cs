@@ -5,22 +5,17 @@ namespace Shooter.AiScheme
 {
 	public class Wander : AiSchemeBase
 	{
-		private float max_speed;
-		private float increase_speed;
-
-		private float speed;
+		private float speedUpStep;
 
 		private Vector2 TargetVelocity;
 
 		private Random rand;
 
-		public Wander()
+		public Wander(float speedUpStep)
 		{
-			max_speed = 2f;
-			increase_speed = .10f;
+			this.speedUpStep = speedUpStep;
 
 			rand = new Random();
-			speed = rand.Next(1, 5) / 2f;
 		}
 
 		public override void Reset()
@@ -88,21 +83,21 @@ namespace Shooter.AiScheme
 			switch (direction)
 			{
 				case Direction.Right:
-					TargetVelocity.X += increase_speed;
+					TargetVelocity.X += speedUpStep;
 					break;
 				case Direction.Left:
-					TargetVelocity.X -= increase_speed;
+					TargetVelocity.X -= speedUpStep;
 					break;
 				case Direction.Up:
-					TargetVelocity.Y -= increase_speed;
+					TargetVelocity.Y -= speedUpStep;
 					break;
 				case Direction.Down:
-					TargetVelocity.Y += increase_speed;
+					TargetVelocity.Y += speedUpStep;
 					break;
 			}
 
-			TargetVelocity.X = MathHelper.Clamp(TargetVelocity.X, max_speed * -1, max_speed);
-			TargetVelocity.Y = MathHelper.Clamp(TargetVelocity.Y, max_speed * -1, max_speed);
+			TargetVelocity.X = MathHelper.Clamp(TargetVelocity.X, Actor.MaxSpeed * -1, Actor.MaxSpeed);
+			TargetVelocity.Y = MathHelper.Clamp(TargetVelocity.Y, Actor.MaxSpeed * -1, Actor.MaxSpeed);
 		}
 	}
 }

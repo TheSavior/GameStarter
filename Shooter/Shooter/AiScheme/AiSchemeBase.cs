@@ -11,10 +11,6 @@ namespace Shooter.AiScheme
 			set;
 		}
 
-		public AiSchemeBase()
-		{
-		}
-
 		public virtual void Reset()
 		{
 

@@ -1,12 +1,12 @@
-﻿using Shooter.AiScheme;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Graphics;
+using Shooter.AiScheme;
 
 namespace Shooter.Actors
 {
 	public class Enemy : SmartActorBase
 	{
 		public Enemy()
-			: base(new Wander())
+			: base(new Wander(speedUpStep: .10f))
 		{
 			MaxSpeed = 3f;
 		}
@@ -15,12 +15,6 @@ namespace Shooter.Actors
 		{
 			Texture = Game.Content.Load<Texture2D>("enemy");
 			base.LoadContent();
-		}
-
-		public override void Reset()
-		{
-			Active = true;
-			base.Reset();
 		}
 
 		public void SetSize(float size)
