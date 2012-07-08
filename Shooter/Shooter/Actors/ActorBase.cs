@@ -5,6 +5,8 @@ namespace Shooter.Actors
 {
 	public class ActorBase : DrawableComponentManager
 	{
+		public float MaxSpeed;
+
 		// Velocity of the Actor
 		public Vector2 Velocity;
 
@@ -22,7 +24,7 @@ namespace Shooter.Actors
 		public Direction DrawDirection
 		{
 			get;
-			protected set;
+			set;
 		}
 
 		public Rectangle BoundingBox

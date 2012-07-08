@@ -1,17 +1,16 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Shooter.AiScheme;
 using Microsoft.Xna.Framework.Input;
+using Shooter.AiScheme;
 
 namespace Shooter.Actors
 {
-	public class Player : KeyboardControlled
+	public class Player : SmartActorBase
 	{
 		public Player()
+			: base(new KeyboardControlled(speedUpStep: .10f, speedDownStep: .05f))
 		{
-			max_speed = 3f;
-			increase_speed = .10f;
-			decrease_speed = .05f;
+			MaxSpeed = 3f;
 		}
 
 		public override void LoadContent()

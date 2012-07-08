@@ -109,7 +109,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actors\ActorBase.cs" />
+    <Compile Include="Actors\SmartActorBase.cs" />
     <Compile Include="AiScheme\KeyboardControlled.cs" />
+    <Compile Include="AiScheme\AiSchemeBase.cs" />
     <Compile Include="AiScheme\Wander.cs" />
     <Compile Include="Camera2D.cs" />
     <Compile Include="Components\HudComponent.cs" />

@@ -1,10 +1,9 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
-using Shooter.Actors;
 
 namespace Shooter.AiScheme
 {
-	public abstract class Wander : ActorBase
+	public class Wander : AiSchemeBase
 	{
 		private float max_speed;
 		private float increase_speed;
@@ -35,7 +34,7 @@ namespace Shooter.AiScheme
 		}
 
 		private int counter;
-		public override void Update(GameTime gameTime)
+		public override void Update()
 		{
 			if (counter == 0)
 			{
@@ -48,32 +47,32 @@ namespace Shooter.AiScheme
 
 			counter--;
 
-			var diff = TargetVelocity - Velocity;
+			var diff = TargetVelocity - Actor.Velocity;
 			if (diff != Vector2.Zero)
 			{
-				Velocity += diff * .025f;
+				Actor.Velocity += diff * .025f;
 			}
 
-			if (Velocity.X > 0)
+			if (Actor.Velocity.X > 0)
 			{
-				DrawDirection = Direction.Right;
+				Actor.DrawDirection = Direction.Right;
 			}
-			else if (Velocity.X < 0)
+			else if (Actor.Velocity.X < 0)
 			{
-				DrawDirection = Direction.Left;
+				Actor.DrawDirection = Direction.Left;
 			}
 
-			Position += Velocity;
+			Actor.Position += Actor.Velocity;
 
 
 			var target = TargetVelocity;
 
-			if (Position.X < 0 || Position.X > Game.GraphicsDevice.Viewport.Width)
+			if (Actor.Position.X < 0 || Actor.Position.X > Globals.Graphics.GraphicsDevice.Viewport.Width)
 			{
 				target.X = -target.X;
 			}
 
-			if (Position.Y < 0 || Position.Y > Game.GraphicsDevice.Viewport.Width)
+			if (Actor.Position.Y < 0 || Actor.Position.Y > Globals.Graphics.GraphicsDevice.Viewport.Width)
 			{
 				target.Y = -target.Y;
 			}
@@ -81,7 +80,7 @@ namespace Shooter.AiScheme
 			TargetVelocity = target;
 
 
-			base.Update(gameTime);
+			base.Update();
 		}
 
 		private void AddDirection(Direction direction)

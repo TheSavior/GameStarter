@@ -1,11 +1,16 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Shooter.AiScheme;
 using Microsoft.Xna.Framework.Graphics;
-using Shooter.AiScheme;
 
 namespace Shooter.Actors
 {
-	public class Enemy : Wander
+	public class Enemy : SmartActorBase
 	{
+		public Enemy()
+			: base(new Wander())
+		{
+			MaxSpeed = 3f;
+		}
+
 		public override void LoadContent()
 		{
 			Texture = Game.Content.Load<Texture2D>("enemy");

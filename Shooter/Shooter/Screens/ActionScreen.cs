@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -164,10 +163,6 @@ namespace Shooter.Screens
 		private void AddEnemy()
 		{
 			// Create an enemy
-			//var size = (float)(random.NextDouble() - .1 + player.Scale);
-			var size = (float)(random.NextDouble() - .5 + player.Scale);
-			size = Math.Max(.2f, size);
-			Debug.WriteLine("Enemy size {0}", size);
 			Enemy enemy = new Enemy();
 
 			// Initialize the enemy
@@ -179,9 +174,11 @@ namespace Shooter.Screens
 			var locX = random.Next(0, viewport.Width - enemy.BoundingBox.Width);
 			var locY = random.Next(0, viewport.Height - enemy.BoundingBox.Height);
 			Vector2 position = new Vector2(locX, locY);
-
 			enemy.Position = position;
 
+			//var size = (float)(random.NextDouble() - .1 + player.Scale);
+			var size = (float)(random.NextDouble() - .5 + player.Scale);
+			size = Math.Max(.2f, size);
 			enemy.SetSize(size);
 
 			// Add the enemy to the active enemies list

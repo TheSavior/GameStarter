@@ -40,6 +40,7 @@ namespace Shooter
 
 		protected override void Update(GameTime gameTime)
 		{
+			Globals.TimeElapsed = gameTime.ElapsedGameTime.TotalSeconds;
 			base.Update(gameTime);
 			Globals.ScreenManager.Update(gameTime);
 		}
