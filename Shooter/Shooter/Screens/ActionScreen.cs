@@ -32,6 +32,8 @@ namespace Shooter.Screens
 
 		HudComponent hud;
 
+		Animations ani;
+
 		public Camera2D camera;
 		float initialZoom;
 		float zoomIncrement;
@@ -60,6 +62,8 @@ namespace Shooter.Screens
 
 			// Initialize our random number generator
 			random = new Random();
+
+			ani = new Animations();
 		}
 
 		public override void Initialize()
@@ -121,6 +125,13 @@ namespace Shooter.Screens
 
 			if (player.Active)
 			{
+				if (Globals.KeyManager.IsKeyPress(Keys.T))
+				{
+					ani.Animate(player.Position, new Vector2(100, 100), 1, (Vector2 value) => { player.Position = value; });
+				}
+
+				ani.Update();
+
 				// Update the enemies
 				UpdateEnemies(gameTime);
 

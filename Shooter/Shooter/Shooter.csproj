@@ -113,6 +113,7 @@
     <Compile Include="AiScheme\KeyboardControlled.cs" />
     <Compile Include="AiScheme\AiSchemeBase.cs" />
     <Compile Include="AiScheme\Wander.cs" />
+    <Compile Include="Animations.cs" />
     <Compile Include="Camera2D.cs" />
     <Compile Include="Components\HudComponent.cs" />
     <Compile Include="DrawableComponent.cs" />
