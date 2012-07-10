@@ -13,6 +13,12 @@ namespace Shooter.Actors
 			MaxSpeed = 3f;
 		}
 
+		public override void Reset()
+		{
+			base.Reset();
+			Width = 3;
+		}
+
 		public override void LoadContent()
 		{
 			Texture = Game.Content.Load<Texture2D>("Fish");
@@ -26,9 +32,9 @@ namespace Shooter.Actors
 			var length = BoundingVector.Length();
 
 			var percent = actor.BoundingVector.Length() / length;
-			var add = MathHelper.Lerp(0, Scale / 10, percent);
+			var add = MathHelper.Lerp(0, Width / 10, percent);
 
-			Scale += add;
+			Width += add;
 		}
 
 		public override void Update(GameTime gameTime)
@@ -49,12 +55,12 @@ namespace Shooter.Actors
 		#region Debug Helpers
 		private void Bigger()
 		{
-			Scale += .05f;
+			Width += .05f;
 		}
 
 		private void Smaller()
 		{
-			Scale -= .05f;
+			Width -= .05f;
 		}
 		#endregion
 	}

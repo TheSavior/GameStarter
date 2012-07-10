@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
+using Shooter.Screens;
 
 namespace Shooter.AiScheme
 {
@@ -61,13 +62,14 @@ namespace Shooter.AiScheme
 
 
 			var target = TargetVelocity;
-
-			if (Actor.Position.X < 0 || Actor.Position.X > Globals.Graphics.GraphicsDevice.Viewport.Width)
+			if (Actor.Position.X < ActionScreen.WorldRectangle.Left + Actor.BoundingBox.Width || 
+				Actor.Position.X > ActionScreen.WorldRectangle.Right - Actor.BoundingBox.Width)
 			{
 				target.X = -target.X;
 			}
 
-			if (Actor.Position.Y < 0 || Actor.Position.Y > Globals.Graphics.GraphicsDevice.Viewport.Width)
+			if (Actor.Position.Y < ActionScreen.WorldRectangle.Top + Actor.BoundingBox.Height ||
+				Actor.Position.Y > ActionScreen.WorldRectangle.Bottom - Actor.BoundingBox.Height)
 			{
 				target.Y = -target.Y;
 			}

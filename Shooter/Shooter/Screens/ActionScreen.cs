@@ -13,10 +13,11 @@ namespace Shooter.Screens
 	public class ActionScreen : ScreenBase
 	{
 		Texture2D image;
-		Rectangle imageRectangle;
+
+		public static Rectangle WorldRectangle;
 
 		// Represents the player 
-		public Player player;
+		public static Player Player;
 
 		// Enemies
 		List<Enemy> enemies;
@@ -32,27 +33,34 @@ namespace Shooter.Screens
 
 		HudComponent hud;
 
-		Animations ani;
-
 		public Camera2D camera;
 		float initialZoom;
 		float zoomIncrement;
 
 		public ActionScreen()
 		{
-			imageRectangle = new Rectangle(
-				0,
-				0,
-				Globals.Graphics.GraphicsDevice.Viewport.Width,
-				Globals.Graphics.GraphicsDevice.Viewport.Height);
+			var viewport = Globals.Graphics.GraphicsDevice.Viewport;
+			Vector2 aspectRatio = new Vector2(viewport.Width, viewport.Height);
+			aspectRatio.Normalize();
 
-			zoomIncrement = .4f;
-			initialZoom = 5f;
+			// 100cm scaled 
+			int width = (int)(100 * aspectRatio.X * 2);
+			int height = (int)(100 * aspectRatio.Y * 2);
+
+			WorldRectangle = new Rectangle(
+				-width / 2,
+				-height / 2,
+				width,
+				height);
+
+			zoomIncrement = .1f;
+			//initialZoom = 5f;
+			initialZoom = (float)viewport.Width / width;
 
 			camera = new Camera2D(
-				Globals.Graphics.GraphicsDevice.Viewport,
-				Globals.Graphics.GraphicsDevice.Viewport.Width,
-				Globals.Graphics.GraphicsDevice.Viewport.Height);
+				viewport,
+				width,
+				height);
 
 			// Set the time keepers to zero
 			previousSpawnTime = TimeSpan.Zero;
@@ -62,15 +70,13 @@ namespace Shooter.Screens
 
 			// Initialize our random number generator
 			random = new Random();
-
-			ani = new Animations();
 		}
 
 		public override void Initialize()
 		{
 			// Initialize the player class
-			player = new Player();
-			Components.Add(player);
+			Player = new Player();
+			Components.Add(Player);
 
 			popup = new GameOverPopup(this);
 			Components.Add(popup);
@@ -97,10 +103,10 @@ namespace Shooter.Screens
 			enemies = new List<Enemy>();
 			popup.Visible = false;
 
-			Vector2 playerPosition = new Vector2(0 + player.BoundingBox.Width / 2, Globals.Graphics.GraphicsDevice.Viewport.Height / 2);
-			player.Position = playerPosition;
+			Vector2 playerPosition = new Vector2(0, 0);
+			Player.Position = playerPosition;
 
-			player.Scale = .2f;
+			Player.Width = .2f;
 
 			camera.SetZoom(initialZoom);
 			camera.SetPosition(playerPosition);
@@ -114,24 +120,17 @@ namespace Shooter.Screens
 			else if (Globals.KeyManager.IsKeyPress(Keys.Q))
 				camera.ChangeZoom(zoomIncrement);
 
-			camera.MoveTo(player.Position);
+			camera.MoveTo(Player.Position);
 
 			camera.Update();
 
-			if (!player.Active)
+			if (!Player.Active)
 			{
-				player.Enabled = false;
+				Player.Enabled = false;
 			}
 
-			if (player.Active)
+			if (Player.Active)
 			{
-				if (Globals.KeyManager.IsKeyPress(Keys.T))
-				{
-					ani.Animate(player.Position, new Vector2(100, 100), 1, (Vector2 value) => { player.Position = value; });
-				}
-
-				ani.Update();
-
 				// Update the enemies
 				UpdateEnemies(gameTime);
 
@@ -149,22 +148,31 @@ namespace Shooter.Screens
 					null, null, null, null, null,
 					camera.GetTransformation());
 
-			Globals.SpriteBatch.Draw(image, imageRectangle, Color.White);
+			Vector2 scale = new Vector2((float)WorldRectangle.Width / image.Width + 0.01f, (float)WorldRectangle.Height / image.Height + 0.01f);
+			//Globals.SpriteBatch.Draw(image, WorldRectangle, Color.White);
 
+			//Globals.SpriteBatch.Draw(image, Vector2.Zero, null, Color.White, 0f, image.Bounds.Center(), SpriteEffects.None, 0);
+
+			var center = image.Bounds.Center();
+
+
+
+
+			Globals.SpriteBatch.Draw(image, Vector2.Zero, null, Color.White, 0f, image.Bounds.Center(), scale, SpriteEffects.None, 0);
 			// Draw the Enemies
 			for (int i = 0; i < enemies.Count; i++)
 			{
 				enemies[i].Draw(gameTime);
 			}
 
-			player.Draw(gameTime);
+			Player.Draw(gameTime);
 
 			Globals.SpriteBatch.End();
 
 			Globals.SpriteBatch.Begin();
 			hud.Draw(gameTime);
 
-			if (!player.Active)
+			if (!Player.Active)
 			{
 				popup.Draw(gameTime);
 			}
@@ -182,14 +190,17 @@ namespace Shooter.Screens
 
 			// Randomly generate the position of the enemy
 			var viewport = Globals.Graphics.GraphicsDevice.Viewport;
-			var locX = random.Next(0, viewport.Width - enemy.BoundingBox.Width);
-			var locY = random.Next(0, viewport.Height - enemy.BoundingBox.Height);
+
+			var halfEnemy = enemy.BoundingVector / 2;
+
+			var locX = random.Next((int)(WorldRectangle.Left + halfEnemy.X), (int)(WorldRectangle.Right - halfEnemy.X));
+			var locY = random.Next((int)(WorldRectangle.Top + halfEnemy.Y), (int)(WorldRectangle.Bottom - halfEnemy.Y));
 			Vector2 position = new Vector2(locX, locY);
 			enemy.Position = position;
 
 			//var size = (float)(random.NextDouble() - .1 + player.Scale);
-			var size = (float)(random.NextDouble() - .5 + player.Scale);
-			size = Math.Max(.2f, size);
+			var size = (float)(random.NextDouble() * 5 * Player.Width);
+			size = Math.Max(Player.Width / 2, size);
 			enemy.SetSize(size);
 
 			// Add the enemy to the active enemies list
@@ -223,10 +234,10 @@ namespace Shooter.Screens
 		{
 			// Use the Rectangle's built-in intersect function to 
 			// determine if two objects are overlapping
-			Rectangle playerBounds = player.BoundingBox;
+			Rectangle playerBounds = Player.BoundingBox;
 			Rectangle enemyBounds;
 
-			Color[,] playerColors = player.Texture.ToColorArray();
+			Color[,] playerColors = Player.Texture.ToColorArray();
 			Color[,] enemyColors;
 
 			// Do the collision between the player and the enemies
@@ -256,7 +267,7 @@ namespace Shooter.Screens
 
 							// Find the location of this pixel on the original texture
 							// by dividing the scaled one by the scale
-							Vector2 playerTexturePixelPos = playerScaledPixelPos / player.Scale;
+							Vector2 playerTexturePixelPos = playerScaledPixelPos / Player.Width;
 
 							// Given an x and y, figure out if the enemy bounds contains it
 							// if yes, find the position of that location relative to the top left of
@@ -265,13 +276,13 @@ namespace Shooter.Screens
 							{
 								// it is inside the enemy box
 								Vector2 enemyScaledPixelPos = realWorldPixelPos - new Vector2(enemyBounds.X, enemyBounds.Y);
-								Vector2 enemyTexturePixelPos = enemyScaledPixelPos / enemies[i].Scale;
+								Vector2 enemyTexturePixelPos = enemyScaledPixelPos / enemies[i].Width;
 
 								// Lets handle flipping
 								int playerTextureWithFlip = (int)playerTexturePixelPos.X;
-								if (player.Velocity.X < 0)
+								if (Player.Velocity.X < 0)
 								{
-									playerTextureWithFlip = player.Texture.Width - playerTextureWithFlip - 1;
+									playerTextureWithFlip = Player.Texture.Width - playerTextureWithFlip - 1;
 								}
 
 								if (playerColors[playerTextureWithFlip, (int)playerTexturePixelPos.Y].A > 0)
@@ -279,16 +290,16 @@ namespace Shooter.Screens
 									if (enemyColors[(int)enemyTexturePixelPos.X, (int)enemyTexturePixelPos.Y].A > 0)
 									{
 										// Collision, either game over or success eating
-										if (enemies[i].BoundingVector.Length() <= player.BoundingVector.Length())
+										if (enemies[i].BoundingVector.Length() <= Player.BoundingVector.Length())
 										{
-											player.Eat(enemies[i]);
+											Player.Eat(enemies[i]);
 											enemies[i].Active = false;
 
-											camera.ZoomTo(1 / player.Scale);
+											camera.ZoomTo(1 / Player.Width);
 										}
 										else
 										{
-											player.Active = false;
+											Player.Active = false;
 										}
 										return;
 

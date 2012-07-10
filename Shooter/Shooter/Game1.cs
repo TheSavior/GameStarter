@@ -4,7 +4,9 @@ using Microsoft.Xna.Framework.Graphics;
 namespace Shooter
 {
 	/// <summary>
-	/// This is the main type for your game
+	/// Game units:
+	/// Distance in CMs
+	/// Time in Seconds
 	/// </summary>
 	public class Game1 : Game
 	{

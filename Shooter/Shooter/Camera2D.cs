@@ -5,7 +5,7 @@ namespace Shooter
 	public class Camera2D
 	{
 		private const float zoomUpperLimit = 5f;
-		private const float zoomLowerLimit = 1f;
+		private const float zoomLowerLimit = .5f;
 
 		private float _zoom;
 		private Matrix _transform;
@@ -108,22 +108,36 @@ namespace Shooter
 
 		private Vector2 BoundPosition(Vector2 position)
 		{
-			float leftBarrier = (float)_viewportWidth *
-						.5f / _zoom;
-			float rightBarrier = _worldWidth -
-					(float)_viewportWidth * .5f / _zoom;
+			//return position;
+
+			//float leftBarrier = (float)(_worldWidth + _viewportWidth/2) / _zoom;
+			float leftBarrier = -_worldWidth / 2 + _worldWidth / 2 / _zoom;
+			float rightBarrier = _worldWidth / 2 - _worldWidth / 2 / _zoom;
+			float topBarrier = -_worldHeight / 2 + _worldHeight / 2 / _zoom;
+			float bottomBarrier = _worldHeight / 2 - _worldHeight / 2 / _zoom;
+			
+			/*float rightBarrier = _worldWidth - (float)_viewportWidth * .5f / _zoom;
 			float topBarrier = _worldHeight -
 					(float)_viewportHeight * .5f / _zoom;
 			float bottomBarrier = (float)_viewportHeight *
 					.5f / _zoom;
+			
 
+			/*
+			float leftBarrier = (float)-_worldWidth + _viewportWidth/_zoom;
+			float rightBarrier = _worldWidth;
+			float topBarrier = _worldHeight -
+					(float)_viewportHeight * .5f / _zoom;
+			float bottomBarrier = (float)_viewportHeight *
+					.5f / _zoom;
+			*/
 			if (position.X < leftBarrier)
 				position.X = leftBarrier;
 			if (position.X > rightBarrier)
 				position.X = rightBarrier;
-			if (position.Y > topBarrier)
+			if (position.Y < topBarrier)
 				position.Y = topBarrier;
-			if (position.Y < bottomBarrier)
+			if (position.Y > bottomBarrier)
 				position.Y = bottomBarrier;
 
 			return position;

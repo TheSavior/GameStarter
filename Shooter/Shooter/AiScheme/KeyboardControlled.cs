@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Shooter.Screens;
 
 namespace Shooter.AiScheme
 {
@@ -49,30 +50,29 @@ namespace Shooter.AiScheme
 		private void UpdatePosition()
 		{
 			Actor.Position.X += Actor.Velocity.X;
-			if (
-				Actor.Position.X < Actor.BoundingBox.Width / 2 ||
-				Actor.Position.X > Globals.Graphics.GraphicsDevice.Viewport.Width - Actor.BoundingBox.Width / 2)
+			if (Actor.Position.X < ActionScreen.WorldRectangle.Left + Actor.BoundingBox.Width ||
+				Actor.Position.X > ActionScreen.WorldRectangle.Right - Actor.BoundingBox.Width)
 			{
 				Actor.Velocity.X = 0;
 			}
 
 			Actor.Position.X = MathHelper.Clamp(
 				Actor.Position.X,
-				0 + Actor.BoundingBox.Width / 2,
-				Globals.Graphics.GraphicsDevice.Viewport.Width - Actor.BoundingBox.Width / 2);
+				ActionScreen.WorldRectangle.Left + Actor.BoundingBox.Width,
+				ActionScreen.WorldRectangle.Right - Actor.BoundingBox.Width);
 
 			Actor.Position.Y += Actor.Velocity.Y;
 
-			if (Actor.Position.Y < 0 + Actor.BoundingBox.Height / 2 ||
-				Actor.Position.Y > Globals.Graphics.GraphicsDevice.Viewport.Height - Actor.BoundingBox.Height / 2)
+			if (Actor.Position.Y < ActionScreen.WorldRectangle.Top + Actor.BoundingBox.Height ||
+				Actor.Position.Y > ActionScreen.WorldRectangle.Bottom - Actor.BoundingBox.Height)
 			{
 				Actor.Velocity.Y = 0;
 			}
 
 			Actor.Position.Y = MathHelper.Clamp(
 				Actor.Position.Y,
-				0 + Actor.BoundingBox.Height / 2,
-				Actor.Position.Y = Globals.Graphics.GraphicsDevice.Viewport.Height - Actor.BoundingBox.Height / 2);
+				ActionScreen.WorldRectangle.Top + Actor.BoundingBox.Height,
+				ActionScreen.WorldRectangle.Bottom - Actor.BoundingBox.Height / 2);
 		}
 
 		private void AddDirection(Direction direction)

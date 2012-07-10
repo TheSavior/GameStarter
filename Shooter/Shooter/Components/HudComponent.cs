@@ -10,11 +10,11 @@ namespace Shooter.Components
 		SpriteFont font;
 		Rectangle drawRectangle;
 
-		ActionScreen screens;
+		ActionScreen screen;
 
 		public HudComponent(ActionScreen screen)
 		{
-			this.screens = screen;
+			this.screen = screen;
 
 			drawRectangle = new Rectangle(
 				0,
@@ -32,7 +32,7 @@ namespace Shooter.Components
 
 		public override void Draw(GameTime gameTime)
 		{
-			var str = string.Format("Player Size: {0}", screens.player.Scale.ToString("#.###"));
+			var str = string.Format("Player Size: {0}", ActionScreen.Player.Width.ToString("#.###"));
 
 			Vector2 stringSize = font.MeasureString(str);
 			Vector2 center = stringSize / 2;
@@ -48,7 +48,7 @@ namespace Shooter.Components
 			Globals.SpriteBatch.DrawString(font, str, position, Color.LightGreen, 0, align, 1.0f, SpriteEffects.None, 0.5f);
 
 
-			str = string.Format("Camera Zoom: {0}", screens.camera.Zoom.ToString("#.#"));
+			str = string.Format("Camera Zoom: {0}", screen.camera.Zoom.ToString("#.####"));
 			var newStringSize = font.MeasureString(str);
 			center = newStringSize / 2;
 			right = new Vector2(newStringSize.X, newStringSize.Y / 2);
