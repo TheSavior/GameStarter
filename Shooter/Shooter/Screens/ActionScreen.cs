@@ -53,14 +53,18 @@ namespace Shooter.Screens
 				width,
 				height);
 
-			zoomIncrement = .1f;
-			//initialZoom = 5f;
+			zoomIncrement = .5f;
 			initialZoom = (float)viewport.Width / width;
 
 			camera = new Camera2D(
 				viewport,
 				width,
-				height);
+				height,
+				initialZoom);
+
+			camera.MinZoom = initialZoom;
+			camera.MaxZoom = 10f;
+
 
 			// Set the time keepers to zero
 			previousSpawnTime = TimeSpan.Zero;
@@ -108,7 +112,7 @@ namespace Shooter.Screens
 
 			Player.Width = .2f;
 
-			camera.SetZoom(initialZoom);
+			camera.Reset();
 			camera.SetPosition(playerPosition);
 		}
 
@@ -199,7 +203,7 @@ namespace Shooter.Screens
 			enemy.Position = position;
 
 			//var size = (float)(random.NextDouble() - .1 + player.Scale);
-			var size = (float)(random.NextDouble() * 5 * Player.Width);
+			var size = (float)(random.NextDouble() * Player.Width);
 			size = Math.Max(Player.Width / 2, size);
 			enemy.SetSize(size);
 

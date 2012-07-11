@@ -4,9 +4,6 @@ namespace Shooter
 {
 	public class Camera2D
 	{
-		private const float zoomUpperLimit = 5f;
-		private const float zoomLowerLimit = .5f;
-
 		private float _zoom;
 		private Matrix _transform;
 		private Vector2 _pos;
@@ -18,7 +15,21 @@ namespace Shooter
 		private Vector2 goalPosition;
 		private float goalZoom;
 
+		private readonly float initialZoom;
+
 		#region Properties
+
+		public float MaxZoom
+		{
+			get;
+			set;
+		}
+
+		public float MinZoom
+		{
+			get;
+			set;
+		}
 
 		public float Zoom
 		{
@@ -47,16 +58,23 @@ namespace Shooter
 		#endregion
 
 		public Camera2D(Viewport viewport, int worldWidth,
-			int worldHeight)
+			int worldHeight, float initialZoom)
 		{
 			Rotation = 0.0f;
-			SetZoom(2f);
-			SetPosition(Vector2.Zero);
+			this.initialZoom = initialZoom;
 
 			_viewportWidth = viewport.Width;
 			_viewportHeight = viewport.Height;
 			_worldWidth = worldWidth;
 			_worldHeight = worldHeight;
+
+			Reset();
+		}
+
+		public void Reset()
+		{
+			SetZoom(this.initialZoom);
+			SetPosition(Vector2.Zero);
 		}
 
 		public void ChangeZoom(float change)
@@ -108,48 +126,20 @@ namespace Shooter
 
 		private Vector2 BoundPosition(Vector2 position)
 		{
-			//return position;
+			float leftBarrier = -_worldWidth / 2 + _worldWidth / 2 / (_zoom / initialZoom);
+			float rightBarrier = _worldWidth / 2 - _worldWidth / 2 / (_zoom / initialZoom);
+			float topBarrier = -_worldHeight / 2 + _worldHeight / 2 / (_zoom / initialZoom);
+			float bottomBarrier = _worldHeight / 2 - _worldHeight / 2 / (_zoom / initialZoom);
 
-			//float leftBarrier = (float)(_worldWidth + _viewportWidth/2) / _zoom;
-			float leftBarrier = -_worldWidth / 2 + _worldWidth / 2 / _zoom;
-			float rightBarrier = _worldWidth / 2 - _worldWidth / 2 / _zoom;
-			float topBarrier = -_worldHeight / 2 + _worldHeight / 2 / _zoom;
-			float bottomBarrier = _worldHeight / 2 - _worldHeight / 2 / _zoom;
-			
-			/*float rightBarrier = _worldWidth - (float)_viewportWidth * .5f / _zoom;
-			float topBarrier = _worldHeight -
-					(float)_viewportHeight * .5f / _zoom;
-			float bottomBarrier = (float)_viewportHeight *
-					.5f / _zoom;
-			
-
-			/*
-			float leftBarrier = (float)-_worldWidth + _viewportWidth/_zoom;
-			float rightBarrier = _worldWidth;
-			float topBarrier = _worldHeight -
-					(float)_viewportHeight * .5f / _zoom;
-			float bottomBarrier = (float)_viewportHeight *
-					.5f / _zoom;
-			*/
-			if (position.X < leftBarrier)
-				position.X = leftBarrier;
-			if (position.X > rightBarrier)
-				position.X = rightBarrier;
-			if (position.Y < topBarrier)
-				position.Y = topBarrier;
-			if (position.Y > bottomBarrier)
-				position.Y = bottomBarrier;
+			position.X = MathHelper.Clamp(position.X, leftBarrier, rightBarrier);
+			position.Y = MathHelper.Clamp(position.Y, topBarrier, bottomBarrier);
 
 			return position;
 		}
 
 		private float BoundZoom(float zoom)
 		{
-			if (zoom < zoomLowerLimit)
-				zoom = zoomLowerLimit;
-			if (zoom > zoomUpperLimit)
-				zoom = zoomUpperLimit;
-
+			zoom = MathHelper.Clamp(zoom, MinZoom, MaxZoom);
 			return zoom;
 		}
 	}
