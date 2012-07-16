@@ -46,7 +46,6 @@
 
 
 		Vector2 start;
-		Vector2 vectorRef;
 		float startTime;
 		float duration;
 		float elapsed;
@@ -57,7 +56,6 @@
 		public void Animate(Vector2 vector, Vector2 change, float duration, Action<Vector2> callback)
 		{
 			this.start = new Vector2(vector.X, vector.Y);
-			this.vectorRef = vector;
 			startTime = (float)Globals.GameTime.TotalGameTime.TotalSeconds;
 			this.duration = duration;
 			this.change = change;

@@ -37,7 +37,7 @@ namespace Shooter.AiScheme
 				var direction = values[rand.Next(0, values.Length)];
 
 				AddDirection(direction);
-				counter = rand.Next(10, 80);
+				counter = rand.Next(80, 300);
 			}
 
 			counter--;

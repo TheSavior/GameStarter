@@ -32,7 +32,7 @@ namespace Shooter.Components
 
 		public override void Draw(GameTime gameTime)
 		{
-			var str = string.Format("Player Size: {0}", ActionScreen.Player.Scale.ToString("#.###"));
+			var str = string.Format("Player Size: {0}", ActionScreen.Player.Width.ToString("#.###"));
 
 			Vector2 stringSize = font.MeasureString(str);
 			Vector2 center = stringSize / 2;

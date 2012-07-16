@@ -109,7 +109,7 @@ namespace Shooter.Screens
 			Vector2 playerPosition = new Vector2(0, 0);
 			Player.Position = playerPosition;
 
-			Player.Scale = .2f;
+			Player.Width = .2f;
 
 			camera.Reset();
 			camera.SetPosition(playerPosition);
@@ -202,8 +202,8 @@ namespace Shooter.Screens
 			enemy.Position = position;
 
 			//var size = (float)(random.NextDouble() - .1 + player.Scale);
-			var size = (float)(random.NextDouble() * Player.Scale);
-			size = Math.Max(Player.Scale / 2, size);
+			var size = (float)(random.NextDouble() * Player.Width);
+			size = Math.Max(Player.Width / 2, size);
 			enemy.SetSize(size);
 
 			// Add the enemy to the active enemies list
@@ -270,7 +270,7 @@ namespace Shooter.Screens
 
 							// Find the location of this pixel on the original texture
 							// by dividing the scaled one by the scale
-							Vector2 playerTexturePixelPos = playerScaledPixelPos / Player.Scale;
+							Vector2 playerTexturePixelPos = playerScaledPixelPos / Player.Width;
 
 							// Given an x and y, figure out if the enemy bounds contains it
 							// if yes, find the position of that location relative to the top left of
@@ -279,7 +279,7 @@ namespace Shooter.Screens
 							{
 								// it is inside the enemy box
 								Vector2 enemyScaledPixelPos = realWorldPixelPos - new Vector2(enemyBounds.X, enemyBounds.Y);
-								Vector2 enemyTexturePixelPos = enemyScaledPixelPos / enemies[i].Scale;
+								Vector2 enemyTexturePixelPos = enemyScaledPixelPos / enemies[i].Width;
 
 								// Lets handle flipping
 								int playerTextureWithFlip = (int)playerTexturePixelPos.X;
@@ -293,8 +293,7 @@ namespace Shooter.Screens
 									if (enemyColors[(int)enemyTexturePixelPos.X, (int)enemyTexturePixelPos.Y].A > 0)
 									{
 										// Collision, either game over or success eating
-										/*
-										if (enemies[i].BoundingVector.Length() <= Player.BoundingVector.Length())
+										if (enemies[i].Width <= Player.Width)
 										{
 											Player.Eat(enemies[i]);
 											enemies[i].Active = false;
@@ -305,7 +304,7 @@ namespace Shooter.Screens
 										{
 											Player.Active = false;
 										}
-										 */
+
 										return;
 
 									}
