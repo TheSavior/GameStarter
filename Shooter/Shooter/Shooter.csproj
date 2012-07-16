@@ -124,6 +124,7 @@
     <Compile Include="KeyboardManager.cs" />
     <Compile Include="Popups\GameOverPopup.cs" />
     <Compile Include="Popups\PopupBase.cs" />
+    <Compile Include="RectangleF.cs" />
     <Compile Include="Screen.cs" />
     <Compile Include="Screens\ActionScreen.cs" />
     <Compile Include="Direction.cs" />

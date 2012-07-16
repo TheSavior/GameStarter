@@ -9,12 +9,27 @@ namespace Shooter.Extensions
 			return new Vector2(rectangle.Center.X, rectangle.Center.Y);
 		}
 
+		public static Vector2 Center(this RectangleF rectangle)
+		{
+			return new Vector2(rectangle.Center.X, rectangle.Center.Y);
+		}
+
 		public static Vector2 TopRight(this Rectangle rectangle)
 		{
 			return new Vector2(rectangle.Right, rectangle.Top);
 		}
 
+		public static Vector2 TopRight(this RectangleF rectangle)
+		{
+			return new Vector2(rectangle.Right, rectangle.Top);
+		}
+
 		public static Vector2 BoundingVector(this Rectangle rectangle)
+		{
+			return new Vector2(rectangle.Width, rectangle.Height);
+		}
+
+		public static Vector2 BoundingVector(this RectangleF rectangle)
 		{
 			return new Vector2(rectangle.Width, rectangle.Height);
 		}

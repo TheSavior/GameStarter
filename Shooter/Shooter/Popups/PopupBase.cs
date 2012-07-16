@@ -4,6 +4,6 @@ namespace Shooter.Popups
 {
 	public class PopupBase
 	{
-		Rectangle drawRectangle;
+		RectangleF drawRectangle;
 	}
 }

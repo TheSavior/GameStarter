@@ -20,7 +20,7 @@ namespace Shooter.Actors
 		public Vector2 Position;
 
 		// Width of the actor in cm
-		public float Width
+		public float Scale
 		{
 			get;
 			set;
@@ -32,18 +32,21 @@ namespace Shooter.Actors
 			set;
 		}
 
-		public Rectangle BoundingBox
+		public RectangleF BoundingBox
 		{
 			get
 			{
-				var aspectRatio = Width / Texture.Width;
-				var height = Texture.Height * aspectRatio;
+				//var aspectRatio = Scale / Texture.Width;
+				//var height = Texture.Height * aspectRatio;
 
-				return new Rectangle(
-					(int)(Position.X - Width / 2),
-					(int)(Position.Y - height / 2),
-					(int)(Width),
-					(int)(height)
+				var width = Texture.Width * Scale;
+				var height = Texture.Height * Scale;
+
+				return new RectangleF(
+					(Position.X - width / 2),
+					(Position.Y - height / 2),
+					(width),
+					(height)
 					);
 
 				/*return new Rectangle(
@@ -59,9 +62,12 @@ namespace Shooter.Actors
 		{
 			get
 			{
+				var aspectRatio = Scale / Texture.Width;
+				var height = Texture.Height * aspectRatio;
+
 				return new Vector2(
-					BoundingBox.Width,
-					BoundingBox.Height);
+					Position.X - Scale / 2,
+					Position.Y - height / 2);
 			}
 		}
 
@@ -69,7 +75,7 @@ namespace Shooter.Actors
 		{
 			Active = true;
 			Enabled = true;
-			Width = 1f;
+			Scale = 1f;
 			DrawDirection = Direction.Right;
 
 			base.Reset();
@@ -84,7 +90,7 @@ namespace Shooter.Actors
 			}
 
 			var origin = new Vector2(Texture.Width / 2, Texture.Height / 2);
-			Globals.SpriteBatch.Draw(Texture, Position, null, Color.White, 0, origin, Width, effect, 0);
+			Globals.SpriteBatch.Draw(Texture, Position, null, Color.White, 0, origin, Scale, effect, 0);
 			base.Draw(gameTime);
 		}
 	}

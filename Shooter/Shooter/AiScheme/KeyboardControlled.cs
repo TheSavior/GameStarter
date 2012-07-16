@@ -49,30 +49,26 @@ namespace Shooter.AiScheme
 
 		private void UpdatePosition()
 		{
+			var leftBound = ActionScreen.WorldRectangle.Left + Actor.BoundingBox.Width / 2;
+			var rightBound = ActionScreen.WorldRectangle.Right - Actor.BoundingBox.Width / 2;
+			var topBound = ActionScreen.WorldRectangle.Top + Actor.BoundingBox.Height / 2;
+			var bottomBound = ActionScreen.WorldRectangle.Bottom - Actor.BoundingBox.Height / 2;
+
 			Actor.Position.X += Actor.Velocity.X;
-			if (Actor.Position.X < ActionScreen.WorldRectangle.Left + Actor.BoundingBox.Width ||
-				Actor.Position.X > ActionScreen.WorldRectangle.Right - Actor.BoundingBox.Width)
+			if (Actor.Position.X < leftBound || Actor.Position.X > rightBound)
 			{
 				Actor.Velocity.X = 0;
 			}
 
-			Actor.Position.X = MathHelper.Clamp(
-				Actor.Position.X,
-				ActionScreen.WorldRectangle.Left + Actor.BoundingBox.Width,
-				ActionScreen.WorldRectangle.Right - Actor.BoundingBox.Width);
+			Actor.Position.X = MathHelper.Clamp(Actor.Position.X, leftBound, rightBound);
 
 			Actor.Position.Y += Actor.Velocity.Y;
-
-			if (Actor.Position.Y < ActionScreen.WorldRectangle.Top + Actor.BoundingBox.Height ||
-				Actor.Position.Y > ActionScreen.WorldRectangle.Bottom - Actor.BoundingBox.Height)
+			if (Actor.Position.Y < topBound || Actor.Position.Y > bottomBound)
 			{
 				Actor.Velocity.Y = 0;
 			}
 
-			Actor.Position.Y = MathHelper.Clamp(
-				Actor.Position.Y,
-				ActionScreen.WorldRectangle.Top + Actor.BoundingBox.Height,
-				ActionScreen.WorldRectangle.Bottom - Actor.BoundingBox.Height / 2);
+			Actor.Position.Y = MathHelper.Clamp(Actor.Position.Y, topBound, bottomBound);
 		}
 
 		private void AddDirection(Direction direction)

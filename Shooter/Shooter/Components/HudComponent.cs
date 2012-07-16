@@ -8,7 +8,7 @@ namespace Shooter.Components
 	public class HudComponent : ScreenBase
 	{
 		SpriteFont font;
-		Rectangle drawRectangle;
+		RectangleF drawRectangle;
 
 		ActionScreen screen;
 
@@ -16,7 +16,7 @@ namespace Shooter.Components
 		{
 			this.screen = screen;
 
-			drawRectangle = new Rectangle(
+			drawRectangle = new RectangleF(
 				0,
 				0,
 				Game.Window.ClientBounds.Width,
@@ -32,7 +32,7 @@ namespace Shooter.Components
 
 		public override void Draw(GameTime gameTime)
 		{
-			var str = string.Format("Player Size: {0}", ActionScreen.Player.Width.ToString("#.###"));
+			var str = string.Format("Player Size: {0}", ActionScreen.Player.Scale.ToString("#.###"));
 
 			Vector2 stringSize = font.MeasureString(str);
 			Vector2 center = stringSize / 2;

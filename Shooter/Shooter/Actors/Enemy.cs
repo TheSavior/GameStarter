@@ -19,7 +19,7 @@ namespace Shooter.Actors
 
 		public void SetSize(float size)
 		{
-			Width = size;
+			Scale = size;
 		}
 	}
 }

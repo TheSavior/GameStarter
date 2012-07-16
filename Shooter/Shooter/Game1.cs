@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace Shooter
 {
@@ -42,6 +43,10 @@ namespace Shooter
 
 		protected override void Update(GameTime gameTime)
 		{
+			if (Globals.KeyManager.IsKeyPress(Keys.Escape))
+			{
+				Exit();
+			}
 			Globals.GameTime = gameTime;
 			Globals.TimeElapsed = gameTime.ElapsedGameTime.TotalSeconds;
 			base.Update(gameTime);

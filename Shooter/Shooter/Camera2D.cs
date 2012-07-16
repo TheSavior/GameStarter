@@ -9,8 +9,8 @@ namespace Shooter
 		private Vector2 _pos;
 		private int _viewportWidth;
 		private int _viewportHeight;
-		private int _worldWidth;
-		private int _worldHeight;
+		private float _worldWidth;
+		private float _worldHeight;
 
 		private Vector2 goalPosition;
 		private float goalZoom;
@@ -57,8 +57,8 @@ namespace Shooter
 
 		#endregion
 
-		public Camera2D(Viewport viewport, int worldWidth,
-			int worldHeight, float initialZoom)
+		public Camera2D(Viewport viewport, float worldWidth,
+			float worldHeight, float initialZoom)
 		{
 			Rotation = 0.0f;
 			this.initialZoom = initialZoom;

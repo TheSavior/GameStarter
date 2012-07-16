@@ -14,7 +14,7 @@ namespace Shooter.Screens
 	{
 		Texture2D image;
 
-		public static Rectangle WorldRectangle;
+		public static RectangleF WorldRectangle;
 
 		// Represents the player 
 		public static Player Player;
@@ -44,10 +44,10 @@ namespace Shooter.Screens
 			aspectRatio.Normalize();
 
 			// 100cm scaled 
-			int width = (int)(100 * aspectRatio.X * 2);
-			int height = (int)(100 * aspectRatio.Y * 2);
+			float width = (100 * aspectRatio.X * 2);
+			float height = (100 * aspectRatio.Y * 2);
 
-			WorldRectangle = new Rectangle(
+			WorldRectangle = new RectangleF(
 				-width / 2,
 				-height / 2,
 				width,
@@ -62,9 +62,8 @@ namespace Shooter.Screens
 				height,
 				initialZoom);
 
-			camera.MinZoom = initialZoom;
+			camera.MinZoom = initialZoom - 5;
 			camera.MaxZoom = 10f;
-
 
 			// Set the time keepers to zero
 			previousSpawnTime = TimeSpan.Zero;
@@ -110,7 +109,7 @@ namespace Shooter.Screens
 			Vector2 playerPosition = new Vector2(0, 0);
 			Player.Position = playerPosition;
 
-			Player.Width = .2f;
+			Player.Scale = .2f;
 
 			camera.Reset();
 			camera.SetPosition(playerPosition);
@@ -152,7 +151,7 @@ namespace Shooter.Screens
 					null, null, null, null, null,
 					camera.GetTransformation());
 
-			Vector2 scale = new Vector2((float)WorldRectangle.Width / image.Width + 0.01f, (float)WorldRectangle.Height / image.Height + 0.01f);
+			Vector2 scale = new Vector2((float)WorldRectangle.Width / image.Width, (float)WorldRectangle.Height / image.Height);
 			//Globals.SpriteBatch.Draw(image, WorldRectangle, Color.White);
 
 			//Globals.SpriteBatch.Draw(image, Vector2.Zero, null, Color.White, 0f, image.Bounds.Center(), SpriteEffects.None, 0);
@@ -203,8 +202,8 @@ namespace Shooter.Screens
 			enemy.Position = position;
 
 			//var size = (float)(random.NextDouble() - .1 + player.Scale);
-			var size = (float)(random.NextDouble() * Player.Width);
-			size = Math.Max(Player.Width / 2, size);
+			var size = (float)(random.NextDouble() * Player.Scale);
+			size = Math.Max(Player.Scale / 2, size);
 			enemy.SetSize(size);
 
 			// Add the enemy to the active enemies list
@@ -238,8 +237,8 @@ namespace Shooter.Screens
 		{
 			// Use the Rectangle's built-in intersect function to 
 			// determine if two objects are overlapping
-			Rectangle playerBounds = Player.BoundingBox;
-			Rectangle enemyBounds;
+			RectangleF playerBounds = Player.BoundingBox;
+			RectangleF enemyBounds;
 
 			Color[,] playerColors = Player.Texture.ToColorArray();
 			Color[,] enemyColors;
@@ -256,7 +255,7 @@ namespace Shooter.Screens
 				{
 					// The two big rectangles intersect, lets grab just
 					// the rectangle where they intersect
-					Rectangle collisionRectangle = Rectangle.Intersect(playerBounds, enemyBounds);
+					RectangleF collisionRectangle = RectangleF.Intersect(playerBounds, enemyBounds);
 
 					// Possible collision, lets start checking every pixel
 					for (int x1 = 0; x1 < collisionRectangle.Width; x1++)
@@ -271,7 +270,7 @@ namespace Shooter.Screens
 
 							// Find the location of this pixel on the original texture
 							// by dividing the scaled one by the scale
-							Vector2 playerTexturePixelPos = playerScaledPixelPos / Player.Width;
+							Vector2 playerTexturePixelPos = playerScaledPixelPos / Player.Scale;
 
 							// Given an x and y, figure out if the enemy bounds contains it
 							// if yes, find the position of that location relative to the top left of
@@ -280,7 +279,7 @@ namespace Shooter.Screens
 							{
 								// it is inside the enemy box
 								Vector2 enemyScaledPixelPos = realWorldPixelPos - new Vector2(enemyBounds.X, enemyBounds.Y);
-								Vector2 enemyTexturePixelPos = enemyScaledPixelPos / enemies[i].Width;
+								Vector2 enemyTexturePixelPos = enemyScaledPixelPos / enemies[i].Scale;
 
 								// Lets handle flipping
 								int playerTextureWithFlip = (int)playerTexturePixelPos.X;
@@ -294,6 +293,7 @@ namespace Shooter.Screens
 									if (enemyColors[(int)enemyTexturePixelPos.X, (int)enemyTexturePixelPos.Y].A > 0)
 									{
 										// Collision, either game over or success eating
+										/*
 										if (enemies[i].BoundingVector.Length() <= Player.BoundingVector.Length())
 										{
 											Player.Eat(enemies[i]);
@@ -305,6 +305,7 @@ namespace Shooter.Screens
 										{
 											Player.Active = false;
 										}
+										 */
 										return;
 
 									}
