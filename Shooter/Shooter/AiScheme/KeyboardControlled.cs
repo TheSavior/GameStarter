@@ -1,7 +1,6 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Shooter.Screens;
 
 namespace Shooter.AiScheme
 {
@@ -19,7 +18,7 @@ namespace Shooter.AiScheme
 		public override void Update()
 		{
 			ReadInput();
-			UpdatePosition();
+			Actor.BoundPosition();
 
 			base.Update();
 		}
@@ -45,30 +44,6 @@ namespace Shooter.AiScheme
 			{
 				slowDY();
 			}
-		}
-
-		private void UpdatePosition()
-		{
-			var leftBound = ActionScreen.WorldRectangle.Left + Actor.BoundingBox.Width / 2;
-			var rightBound = ActionScreen.WorldRectangle.Right - Actor.BoundingBox.Width / 2;
-			var topBound = ActionScreen.WorldRectangle.Top + Actor.BoundingBox.Height / 2;
-			var bottomBound = ActionScreen.WorldRectangle.Bottom - Actor.BoundingBox.Height / 2;
-
-			Actor.Position.X += Actor.Velocity.X;
-			if (Actor.Position.X < leftBound || Actor.Position.X > rightBound)
-			{
-				Actor.Velocity.X = 0;
-			}
-
-			Actor.Position.X = MathHelper.Clamp(Actor.Position.X, leftBound, rightBound);
-
-			Actor.Position.Y += Actor.Velocity.Y;
-			if (Actor.Position.Y < topBound || Actor.Position.Y > bottomBound)
-			{
-				Actor.Velocity.Y = 0;
-			}
-
-			Actor.Position.Y = MathHelper.Clamp(Actor.Position.Y, topBound, bottomBound);
 		}
 
 		private void AddDirection(Direction direction)

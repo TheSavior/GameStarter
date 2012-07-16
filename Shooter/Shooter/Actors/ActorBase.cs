@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Shooter.Screens;
 
 namespace Shooter.Actors
 {
@@ -92,6 +93,30 @@ namespace Shooter.Actors
 			var origin = new Vector2(Texture.Width / 2, Texture.Height / 2);
 			Globals.SpriteBatch.Draw(Texture, Position, null, Color.White, 0, origin, Scale, effect, 0);
 			base.Draw(gameTime);
+		}
+
+		public void BoundPosition()
+		{
+			var leftBound = ActionScreen.WorldRectangle.Left + BoundingBox.Width / 2;
+			var rightBound = ActionScreen.WorldRectangle.Right - BoundingBox.Width / 2;
+			var topBound = ActionScreen.WorldRectangle.Top + BoundingBox.Height / 2;
+			var bottomBound = ActionScreen.WorldRectangle.Bottom - BoundingBox.Height / 2;
+
+			Position.X += Velocity.X;
+			if (Position.X < leftBound || Position.X > rightBound)
+			{
+				Velocity.X = 0;
+			}
+
+			Position.X = MathHelper.Clamp(Position.X, leftBound, rightBound);
+
+			Position.Y += Velocity.Y;
+			if (Position.Y < topBound || Position.Y > bottomBound)
+			{
+				Velocity.Y = 0;
+			}
+
+			Position.Y = MathHelper.Clamp(Position.Y, topBound, bottomBound);
 		}
 	}
 }

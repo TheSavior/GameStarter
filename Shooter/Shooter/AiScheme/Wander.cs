@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.Xna.Framework;
-using Shooter.Screens;
 
 namespace Shooter.AiScheme
 {
@@ -38,10 +37,12 @@ namespace Shooter.AiScheme
 				var direction = values[rand.Next(0, values.Length)];
 
 				AddDirection(direction);
-				counter = rand.Next(80, 300);
+				counter = rand.Next(10, 80);
 			}
 
 			counter--;
+
+			Actor.BoundPosition();
 
 			var diff = TargetVelocity - Actor.Velocity;
 			if (diff != Vector2.Zero)
@@ -57,25 +58,6 @@ namespace Shooter.AiScheme
 			{
 				Actor.DrawDirection = Direction.Left;
 			}
-
-			Actor.Position += Actor.Velocity;
-
-
-			var target = TargetVelocity;
-			if (Actor.Position.X < ActionScreen.WorldRectangle.Left + Actor.BoundingBox.Width || 
-				Actor.Position.X > ActionScreen.WorldRectangle.Right - Actor.BoundingBox.Width)
-			{
-				target.X = -target.X;
-			}
-
-			if (Actor.Position.Y < ActionScreen.WorldRectangle.Top + Actor.BoundingBox.Height ||
-				Actor.Position.Y > ActionScreen.WorldRectangle.Bottom - Actor.BoundingBox.Height)
-			{
-				target.Y = -target.Y;
-			}
-
-			TargetVelocity = target;
-
 
 			base.Update();
 		}
