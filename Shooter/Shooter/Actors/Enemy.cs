@@ -13,7 +13,7 @@ namespace Shooter.Actors
 
 		public override void LoadContent()
 		{
-			Texture = Game.Content.Load<Texture2D>("enemy");
+            Texture = Game.Content.Load<Texture2D>("Graphics\\enemy");
 			base.LoadContent();
 		}
 

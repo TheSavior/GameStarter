@@ -21,7 +21,7 @@ namespace Shooter.Actors
 
 		public override void LoadContent()
 		{
-			Texture = Game.Content.Load<Texture2D>("Fish");
+            Texture = Game.Content.Load<Texture2D>("Graphics\\Fish");
 			base.LoadContent();
 		}
 

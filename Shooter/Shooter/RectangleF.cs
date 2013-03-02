@@ -1,24 +1,16 @@
-﻿
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Design;
 namespace Shooter
 {
-
-	[Serializable, StructLayout(LayoutKind.Sequential), TypeConverter(typeof(RectangleConverter))]
 	public struct RectangleF : IEquatable<RectangleF>
 	{
-		[SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields")]
 		public float X;
-		[SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields")]
 		public float Y;
-		[SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields")]
 		public float Width;
-		[SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields")]
 		public float Height;
 		private static RectangleF _empty;
 		public float Left

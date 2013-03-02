@@ -31,7 +31,7 @@ namespace Shooter.Screens
 		{
 			spriteBatch = new SpriteBatch(Globals.Graphics.GraphicsDevice);
 
-			image = Content.Load<Texture2D>("alienmetal");
+			image = Content.Load<Texture2D>("Graphics\\alienmetal");
 
 			base.LoadContent();
 		}

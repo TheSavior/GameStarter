@@ -29,7 +29,7 @@ namespace Shooter.Popups
 
 		public override void LoadContent()
 		{
-			image = Content.Load<Texture2D>("alienmetal");
+            image = Content.Load<Texture2D>("Graphics\\alienmetal");
 
 			font = Game.Content.Load<SpriteFont>("gameFont");
 
