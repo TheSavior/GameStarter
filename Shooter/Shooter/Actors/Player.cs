@@ -32,7 +32,7 @@ namespace Shooter.Actors
 			var length = BoundingVector.Length();
 
 			var percent = actor.BoundingVector.Length() / length;
-			var add = MathHelper.Lerp(0, Width / 10, percent);
+			var add = MathHelper.Lerp(0, Width / 10, percent/10);
 
 			Width += add;
 		}

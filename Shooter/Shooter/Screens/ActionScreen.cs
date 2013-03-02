@@ -54,7 +54,10 @@ namespace Shooter.Screens
                 height);
 
             zoomIncrement = .5f;
-            initialZoom = (float)viewport.Width / width;
+
+            float minZoom = (float)viewport.Width / width;
+            
+            initialZoom = minZoom;
 
             camera = new Camera2D(
                 viewport,
@@ -62,8 +65,8 @@ namespace Shooter.Screens
                 height,
                 initialZoom);
 
-            camera.MinZoom = initialZoom - 5;
-            camera.MaxZoom = 10f;
+            camera.MinZoom = minZoom;
+            camera.MaxZoom = 50f;
 
             // Set the time keepers to zero
             previousSpawnTime = TimeSpan.Zero;
